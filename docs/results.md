@@ -29,6 +29,10 @@ The contract forbids a runtime dependency from `src/newsletter.ts` to `src/auth.
 
 PASS does not approve a PR or prove that its behavior is safe. It only covers the selected obligations within implemented capabilities. Unspecified behavior, unsupported source, test quality, deployment behavior, and runtime effects remain outside that conclusion.
 
+The JSON `assessment` separates policy, static-structure, test-definition and test-execution checks and lists unresolved clauses. It always records `intentInterpretation: not-performed`, `testAdequacy: requires-human-review`, and `behavioralCompleteness: not-assessed`. These are assurance limits, not additional passing checks. Text reports print the same limits and manual review actions.
+
+`changedScenarioFiles` lists changed files referenced by explicit evidence paths or recognized test definitions. It is a review aid, not complete detection of every test/configuration change. Read the full file inventory and diff. Removing assertions while retaining scenario names can still pass execution clauses. Resolve adequacy through meaningful assertions, deliberate defect tests and human review, as recorded in the [pilot evaluation record](pilot-template.md).
+
 ## Evidence and trust
 
 Static facts describe extracted code structure. They do not establish execution or reachability. Imported Vitest reports record test execution and are bound to the selected source and contract, but remain **self-attested**.

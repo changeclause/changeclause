@@ -8,7 +8,7 @@ A code diff shows what changed. A change contract records what was supposed to c
 
 ChangeClause helps developers review TypeScript and JavaScript changes against explicit requirements. Run it locally to find missing obligations, unexpected dependencies, changes outside the agreed scope, and missing test evidence.
 
-**Version 0.1.0 · Early evaluation release.** Review and verification require no account, LLM, or hosted service.
+**Version 0.1.1 · Early evaluation release.** Review and verification require no account, LLM, or hosted service.
 
 ## See what it catches
 
@@ -38,7 +38,7 @@ pnpm demo
 
 Packages are not yet published to npm; use this source checkout. Use is subject to [PolyForm Perimeter 1.0.1](LICENSE); see the [license summary](#license).
 
-To run the six execution-based examples:
+To run the execution-based examples and explicit known-limit probes:
 
 ```sh
 pnpm qualify

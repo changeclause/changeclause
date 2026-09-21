@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import { evidenceCommands } from './evidence-commands.js';
+import { assessment } from './assessment.js';
 import { readFile } from 'node:fs/promises';
 import { Command, CommanderError } from 'commander';
 import {
@@ -125,11 +126,19 @@ for (const name of ['review', 'verify']) {
           evidence,
           approvedContract,
         });
+        const assessed = assessment(
+          approvedContract ?? contract,
+          result,
+          base,
+          head,
+          files,
+        );
         if (options.json)
           process.stdout.write(
             JSON.stringify(
               {
                 ...result,
+                assessment: assessed,
                 comparison,
                 files,
                 coverage,
@@ -151,6 +160,20 @@ for (const name of ['review', 'verify']) {
           process.stdout.write(
             `Result: ${result.status} (declared contract)\n`,
           );
+          process.stdout.write(`${assessed.meaning}\n`);
+          for (const check of assessed.checks)
+            process.stdout.write(
+              `Basis ${check.id}: ${check.basis}${check.sources.length ? ` — ${check.sources.join(', ')}` : ''}\n`,
+            );
+          process.stdout.write(
+            'Intent prose is not interpreted. Behavioral completeness is not assessed.\n',
+          );
+          if (assessed.changedScenarioFiles.length)
+            process.stdout.write(
+              `Review changed scenario files: ${assessed.changedScenarioFiles.join(', ')}\n`,
+            );
+          for (const item of assessed.manualReview)
+            process.stdout.write(`MANUAL ${item}\n`);
           process.stdout.write(
             `${files.length} changed files; ${coverage.unmodeledChangedFiles.length} without semantic analysis; ${head.diagnostics.length} analysis limitations.\n`,
           );

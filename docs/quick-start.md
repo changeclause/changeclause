@@ -2,7 +2,7 @@
 
 ChangeClause checks a code change against a written contract: what must exist, what must stay the same, and what must remain out of scope. Start with the included TypeScript example, then try a bounded change in your own repository.
 
-This is **v0.1.0, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
+This is **v0.1.1, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
 
 ## Install from source
 
@@ -32,7 +32,7 @@ Run the qualification examples to see how actual test results affect verificatio
 pnpm qualify
 ```
 
-The harness explicitly executes Vitest on synthetic fixtures, imports the reports, and evaluates six cases. It includes passing signup, a missing scenario, direct and aliased authentication dependencies, and two broken implementations.
+The harness explicitly executes Vitest on synthetic fixtures, imports the reports, and evaluates six conformance cases and two known-limit cases. It includes passing signup, a missing scenario, direct and aliased authentication dependencies, and two broken implementations.
 
 **Review and verify do not execute the analyzed code.** The qualification harness runs tests as a separate, explicit step. Imported results remain self-attested; they do not authenticate the runner or prove the quality of assertions.
 
