@@ -1,0 +1,65 @@
+{
+  "capturedAt": "2026-09-21T17:58:47.826Z",
+  "description": "Selected GitHub Actions outputs from synthetic PRs; static publication, not a live status feed. Imported test evidence remains self-attested.",
+  "runs": [
+    {
+      "case": "pass",
+      "pr": 1,
+      "repository": "changeclause/examples",
+      "status": "PASS",
+      "verificationExit": 0,
+      "testsPassed": 3,
+      "testsTotal": 3,
+      "testExit": 0,
+      "head": "da0936e5b0cd74d7dea29aef72b544750d9ee2a6",
+      "base": "d93bb6b5e87757392292d74ff7021f480a13d66d",
+      "toolRevision": "b2925f9e6433cc94d5bbb2224dbb1143cc5704b5",
+      "runId": 35630179531,
+      "runAttempt": 1,
+      "runUrl": "https://github.com/changeclause/examples/actions/runs/35630179531",
+      "completedAt": "2026-09-21T17:09:41Z",
+      "workflowConclusion": "success",
+      "artifactId": 10653647941,
+      "artifactDigest": "sha256:c3a9a4a1648e1aeecf70b7e1c903d4b24343ab05fd91619c8e5adbcf3a29c203",
+      "artifactExpiresAt": "2026-10-05T17:09:36Z",
+      "reportSha256": "fb2fd4a82a1ff0e051b61557313eb7597dce523cc03377a61c0ce65cc6b015af",
+      "boundary": {
+        "status": "PASS",
+        "message": "No matching fact within the declared extraction capability.",
+        "locations": []
+      }
+    },
+    {
+      "case": "drift",
+      "pr": 2,
+      "repository": "changeclause/examples",
+      "status": "DRIFT",
+      "verificationExit": 1,
+      "testsPassed": 3,
+      "testsTotal": 3,
+      "testExit": 0,
+      "head": "afafd53617e91cfc2b3298200e857b20e2cb8deb",
+      "base": "d93bb6b5e87757392292d74ff7021f480a13d66d",
+      "toolRevision": "b2925f9e6433cc94d5bbb2224dbb1143cc5704b5",
+      "runId": 35630179977,
+      "runAttempt": 1,
+      "runUrl": "https://github.com/changeclause/examples/actions/runs/35630179977",
+      "completedAt": "2026-09-21T17:09:43Z",
+      "workflowConclusion": "failure",
+      "artifactId": 10653167675,
+      "artifactDigest": "sha256:96fd9a9a16090cdddc277256faf54b3cc98b6d3ef3404b9a3e4f778cc1f13da7",
+      "artifactExpiresAt": "2026-10-05T17:09:39Z",
+      "reportSha256": "46cecd4fd6bcd8d570bf52cc8086b0ed53ff38feecd4fb670af6b2db1fdd2f09",
+      "boundary": {
+        "status": "DRIFT",
+        "message": "Forbidden fact observed in head.",
+        "locations": [
+          {
+            "file": "src/newsletter.ts",
+            "line": 1
+          }
+        ]
+      }
+    }
+  ]
+}

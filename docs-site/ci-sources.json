@@ -1,0 +1,4 @@
+[
+  { "case": "pass", "pr": 1, "runId": 35630179531, "expected": "PASS" },
+  { "case": "drift", "pr": 2, "runId": 35630179977, "expected": "DRIFT" }
+]

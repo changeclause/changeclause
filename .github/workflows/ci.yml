@@ -29,6 +29,22 @@ jobs:
       - run: pnpm check
       - run: pnpm demo
       - run: pnpm qualify
+  docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: docs-site/package-lock.json
+      - run: npm ci
+        working-directory: docs-site
+      - run: npm run build
+        working-directory: docs-site
   title:
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -41,7 +57,7 @@ jobs:
           node -e 'if (!/^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-zA-Z0-9._/-]+\))?!?: .+/.test(process.env.PR_TITLE)) { console.error("Use a Conventional Commit PR title, for example feat(cli): add evidence import"); process.exit(1); }'
   quality:
     if: always()
-    needs: [validate, title]
+    needs: [validate, title, docs]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -49,4 +65,5 @@ jobs:
         env:
           VALIDATE: ${{ needs.validate.result }}
           TITLE: ${{ needs.title.result }}
-        run: test "$VALIDATE" = success && test "$TITLE" = success
+          DOCS: ${{ needs.docs.result }}
+        run: test "$VALIDATE" = success && test "$TITLE" = success && test "$DOCS" = success

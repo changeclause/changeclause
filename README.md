@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/changeclause/changeclause/actions/workflows/ci.yml/badge.svg)](https://github.com/changeclause/changeclause/actions/workflows/ci.yml)
 
-[Website](https://changeclause.com) · [Quick start](#quick-start) · [Examples](examples/newsletter/README.md) · [Documentation](#documentation) · [Contributing](CONTRIBUTING.md)
+[Website](https://changeclause.com) · [Developer docs](https://changeclause.dev) · [Quick start](#quick-start) · [Examples](examples/newsletter/README.md) · [Contributing](CONTRIBUTING.md)
 
 A code diff shows what changed. A change contract records what was supposed to change.
 
@@ -81,6 +81,8 @@ Imported Vitest results are **self-attested**: source binding detects stale evid
 A PASS covers the declared supported obligations. Continue using your compiler, tests, security checks, and ordinary code review. See [evidence and trust](docs/architecture/evidence-and-trust.md) for the full boundaries.
 
 ## Documentation
+
+Read the [developer documentation](https://changeclause.dev), including [actual CI examples](https://changeclause.dev/examples/) with preserved reports and exact tested revisions. The site is generated from this repository's public Markdown; see [docs-site](docs-site/README.md) for local preview and publication.
 
 - [Verify a PR](docs/workflows.md)
 - [Newsletter examples](examples/newsletter/README.md)
