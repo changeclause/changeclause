@@ -24,6 +24,14 @@ export const pages = [
       'Select approved intent, prepare test evidence, and verify a committed pull request.',
   },
   {
+    slug: 'agents',
+    file: 'docs/agent-integration.md',
+    title: 'Coding agent integration',
+    group: 'Start here',
+    description:
+      'Install the ChangeClause skill and prepare reviewable specs, contracts and PR evidence.',
+  },
+  {
     slug: 'examples',
     file: 'docs/ci-examples.md',
     title: 'Actual CI examples',

@@ -4,6 +4,8 @@ Start with a bounded TypeScript change. Inspect framework/configuration support 
 
 Use the [pilot evaluation record](pilot-template.md) to map every acceptance criterion to a clause, behavioral evidence, or an explicit manual decision. Keep unsupported requirements visible. Complete a rehearsal with deliberately broken implementations and weakened tests before relying on the first report.
 
+For guided authoring, install the [agent integration skill](agent-integration.md). It helps prepare the spec and coverage mapping; it does not replace the intent decision or add semantic capabilities.
+
 ## Select intent before implementation
 
 Write schema 0.2 with exact allowed paths, a few meaningful requires/forbids/preserves clauses and execution scenarios. Use review JSON to discover exact selectors. Choose the baseline/API expectations before coding. Keep the reviewed contract in a known baseline commit or an external approved copy. If intent legitimately changes, review a new approved copy explicitly; do not weaken it just to get PASS.

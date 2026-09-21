@@ -2,7 +2,7 @@
 
 ChangeClause checks a code change against a written contract: what must exist, what must stay the same, and what must remain out of scope. Start with the included TypeScript example, then try a bounded change in your own repository.
 
-This is **v0.1.1, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
+This is **v0.1.2, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
 
 ## Install from source
 
@@ -49,6 +49,8 @@ pnpm --silent changeclause review \
 This reads the merge-base-to-head change without checking out or running the target code. Use its observations to choose exact selectors for a small contract. Keep uncommitted work out of the comparison and keep generated evidence outside the target repository.
 
 ## Take the next step
+
+- [Use with a coding agent](agent-integration.md): install the skill and draft reviewable specs, contracts and PR reports.
 
 - [Your first PR](workflows.md): select intent, prepare evidence, explicitly run tests, and verify.
 - [Actual CI examples](ci-examples.md): both PRs pass their tests; one violates the declared boundary.

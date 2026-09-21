@@ -11,7 +11,7 @@ import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { parseDocument } from 'yaml';
 
-export const VERSION = '0.1.1';
+export const VERSION = '0.1.2';
 export const excludedDirectories = [
   'node_modules',
   '.git',
