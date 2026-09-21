@@ -1,0 +1,37 @@
+schema: '0.1'
+change:
+  name: Newsletter signup
+  intent: Add signup and storage without coupling newsletter to authentication.
+requires:
+  - id: endpoint
+    match: { kind: symbol, file: src/handler.ts, name: post }
+  - id: subscription
+    match: { kind: symbol, file: src/newsletter.ts, name: subscribe }
+  - id: storage-call
+    description: A syntactic store.put call within subscribe, not proof of execution.
+    match:
+      {
+        kind: call-site,
+        file: src/newsletter.ts,
+        from: 'src/newsletter.ts#subscribe',
+        to: store.put,
+      }
+forbids:
+  - id: no-auth-coupling
+    description: Forbid this direct import specifier in the newsletter module.
+    match: { kind: import, file: src/newsletter.ts, to: './auth.js' }
+preserves:
+  - id: health-unchanged
+    description: Preserve the whole health declaration, not just its signature.
+    match: { kind: symbol, file: src/health.ts, name: health }
+evidence:
+  - id: invalid-email-scenario
+    stage: test
+    method: definition
+    scenario: invalid_email
+    file: src/newsletter.test.ts
+  - id: storage-failure-scenario
+    stage: test
+    method: definition
+    scenario: storage_failure
+    file: src/newsletter.test.ts

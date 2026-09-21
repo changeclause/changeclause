@@ -1,0 +1,27 @@
+{
+  "name": "changeclause-workspace",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@10.29.3",
+  "engines": {
+    "node": ">=24 <25"
+  },
+  "scripts": {
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck && tsc -p tsconfig.tests.json",
+    "test": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "check": "pnpm format:check && pnpm build && pnpm typecheck && pnpm test",
+    "changeclause": "node packages/cli/dist/index.js",
+    "demo": "node scripts/demo.mjs",
+    "qualify": "node scripts/qualify.mjs"
+  },
+  "devDependencies": {
+    "@types/node": "^24.0.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.0.0",
+    "prettier": "^3.6.2"
+  }
+}
