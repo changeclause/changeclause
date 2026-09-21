@@ -13,7 +13,7 @@ Node 24 is required. The build reads public Markdown, never arbitrary repository
 
 ## Cloudflare
 
-The documentation is live at [changeclause.dev](https://changeclause.dev/). The existing Workers static-assets project `changeclause-docs` is connected to this public repository: pushes to `main` build from `docs-site` using `npm run build`, then deploy with `npx wrangler deploy`. The build environment sets `NODE_VERSION=24`, and non-production branch builds are disabled.
+The documentation is live at [changeclause.dev](https://changeclause.dev/). The existing Workers static-assets project `changeclause-docs` is connected to this public repository: pushes to `main` build from `docs-site` using `npm ci && npm run build`, then deploy with `npx wrangler deploy`. The build environment sets `NODE_VERSION=24` and `SKIP_DEPENDENCY_INSTALL=true`; non-production branch builds are disabled. Cloudflare would otherwise detect the parent pnpm workspace and omit this separate npm package. The explicit `npm ci` installs the docs lockfile before building.
 
 To recreate the deployment, use those settings and connect the repository through the existing Cloudflare GitHub integration. `wrangler.jsonc` declares the `changeclause.dev` custom domain; its zone must be active in the deployment account. Do not create a duplicate Worker when updating the existing site.
 
