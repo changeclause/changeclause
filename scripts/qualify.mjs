@@ -38,6 +38,20 @@ try {
     ['incomplete', 'incomplete', 'INCOMPLETE', (s) => s],
     ['drift', 'drift', 'DRIFT', (s) => s],
     [
+      'empty-tests',
+      'good',
+      'PASS',
+      () =>
+        "import type { NewsletterStore } from './storage.js';\nexport async function subscribe(email: string, store: NewsletterStore): Promise<string> { return 'subscribed'; }\n",
+    ],
+    [
+      'unreachable-call',
+      'good',
+      'PASS',
+      () =>
+        "import type { NewsletterStore } from './storage.js';\nexport async function subscribe(email: string, store: NewsletterStore): Promise<string> { return 'subscribed'; }\n",
+    ],
+    [
       'dead-storage',
       'good',
       'INCOMPLETE',
@@ -74,6 +88,17 @@ try {
     );
     const service = path.join(project, 'src/newsletter.ts');
     await writeFile(service, mutate(await readFile(service, 'utf8')));
+    const knownLimitation = ['empty-tests', 'unreachable-call'].includes(name);
+    if (knownLimitation)
+      await writeFile(
+        path.join(project, 'src/newsletter.test.ts'),
+        "import { test } from 'vitest';\ntest('successful_signup', () => {});\ntest('invalid_email', () => {});\ntest('storage_failure', () => {});\n",
+      );
+    if (name === 'unreachable-call')
+      await writeFile(
+        path.join(project, 'src/handler.ts'),
+        "import { subscribe } from './newsletter.js';\nimport type { NewsletterStore } from './storage.js';\nexport async function post(email: string, store: NewsletterStore): Promise<string> { if (false) return subscribe(email, store); return 'ignored'; }\n",
+      );
     if (name === 'alias-drift')
       await writeFile(
         path.join(project, 'tsconfig.json'),
@@ -140,6 +165,18 @@ try {
     if (parsed.status !== expected)
       throw new Error(`${name}: expected ${expected}, got ${verified.stdout}`);
     if (
+      knownLimitation &&
+      (run.status !== 0 ||
+        parsed.assessment?.behavioralCompleteness !== 'not-assessed' ||
+        parsed.assessment?.testAdequacy !== 'requires-human-review' ||
+        !parsed.assessment.changedScenarioFiles.includes(
+          'src/newsletter.test.ts',
+        ))
+    )
+      throw new Error(
+        `${name}: the report must expose its behavioral and test-quality limits`,
+      );
+    if (
       ['dead-storage', 'missing-validation'].includes(name) &&
       run.status !== 1
     )
@@ -150,9 +187,10 @@ try {
       actual: parsed.status,
       testExit: run.status,
       verificationExit: verified.status,
+      category: knownLimitation ? 'known-limitation' : 'conformance',
     });
     console.log(
-      `${name.padEnd(20)} ${parsed.status} (test exit ${run.status})`,
+      `${name.padEnd(20)} ${parsed.status} (test exit ${run.status})${knownLimitation ? ' — KNOWN LIMITATION; behavior is broken, manual review required' : ''}`,
     );
   }
   if (process.env.CHANGECLAUSE_QUALIFICATION_REPORT)

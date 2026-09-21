@@ -2,6 +2,8 @@
 
 Start with a bounded TypeScript change. Inspect framework/configuration support and review the ordinary diff. Unsupported files still participate in inventory and scope, but need manual semantic review.
 
+Use the [pilot evaluation record](pilot-template.md) to map every acceptance criterion to a clause, behavioral evidence, or an explicit manual decision. Keep unsupported requirements visible. Complete a rehearsal with deliberately broken implementations and weakened tests before relying on the first report.
+
 ## Select intent before implementation
 
 Write schema 0.2 with exact allowed paths, a few meaningful requires/forbids/preserves clauses and execution scenarios. Use review JSON to discover exact selectors. Choose the baseline/API expectations before coding. Keep the reviewed contract in a known baseline commit or an external approved copy. If intent legitimately changes, review a new approved copy explicitly; do not weaken it just to get PASS.
@@ -44,7 +46,7 @@ The importer checks source and report consistency, not the honesty of the local 
 
 Read every clause result and the complete file diff, diagnostics and unmodeled file list. PASS covers only declared supported obligations. Resolve UNKNOWN with a scoped supported clause, additional evidence or documented manual review; do not silently waive it. Record useful findings, missed or misleading conclusions, and the manual checks needed to make a review decision.
 
-Directory mode is convenient for fixtures and copied trees. Use `--mode directory` during evidence preparation and matching `--base-dir`/`--head-dir` during verification. Built-in generated-directory exclusions apply and there is no revision identity. `pnpm qualify` automates this sequence for six synthetic cases.
+Directory mode is convenient for fixtures and copied trees. Use `--mode directory` during evidence preparation and matching `--base-dir`/`--head-dir` during verification. Built-in generated-directory exclusions apply and there is no revision identity. `pnpm qualify` automates six conformance cases and two known-limit cases. The latter deliberately obtain PASS with empty tests and broken behavior; they verify the report's limits remain explicit, not that the behavior is correct.
 
 ## CI
 

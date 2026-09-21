@@ -58,6 +58,42 @@ test('human report explains definition versus execution', () => {
   const result = run(args('verify').filter((a) => a !== '--json'));
   expect(result.stdout).toContain('Execution and behavior are not proven');
   expect(result.stdout).toContain('Result: PASS');
+  expect(result.stdout).toContain('not PR approval');
+  expect(result.stdout).toContain('test-definition');
+  expect(result.stdout).toContain('MANUAL');
+});
+
+test('a passing report does not assert behavioral completeness or test adequacy', () => {
+  const report = JSON.parse(run(args('verify')).stdout);
+  expect(report.status).toBe('PASS');
+  expect(report.assessment.verdictScope).toBe('declared-checks-only');
+  expect(report.assessment.behavioralCompleteness).toBe('not-assessed');
+  expect(report.assessment.testAdequacy).toBe('requires-human-review');
+  expect(
+    report.assessment.checks.some(
+      (c: { basis: string }) => c.basis === 'test-definition',
+    ),
+  ).toBe(true);
+  expect(report.assessment.changedScenarioFiles).toContain(
+    'src/newsletter.test.ts',
+  );
+});
+
+test('unsupported execution claims remain unresolved in the assessment', () => {
+  const input = args('verify');
+  input[input.indexOf('--contract') + 1] = `${fixture}/contract.mvp.yaml`;
+  input.push('--approved-contract', `${fixture}/contract.mvp.yaml`);
+  const result = run(input);
+  const report = JSON.parse(result.stdout);
+  expect(result.status).toBe(2);
+  expect(
+    report.assessment.unresolved.map((r: { id: string }) => r.id),
+  ).toContain('stores-email');
+  expect(
+    report.assessment.checks.find(
+      (r: { id: string }) => r.id === 'stores-email',
+    ).basis,
+  ).toBe('test-execution');
 });
 test('bad input is a machine-readable error', () => {
   const result = run(['review', '--base-dir', '/does-not-exist', '--json']);

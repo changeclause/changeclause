@@ -1,5 +1,13 @@
 export const pages = [
   {
+    slug: 'pilot-record',
+    file: 'docs/pilot-template.md',
+    title: 'Pilot evaluation record',
+    group: 'Start here',
+    description:
+      'Map requirements to evidence and record the first advisory PR evaluation.',
+  },
+  {
     slug: '',
     file: 'docs/quick-start.md',
     title: 'Quick start',
