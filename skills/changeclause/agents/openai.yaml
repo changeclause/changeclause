@@ -1,0 +1,4 @@
+interface:
+  display_name: 'ChangeClause'
+  short_description: 'Draft change specs and review PR evidence'
+  default_prompt: 'Use $changeclause to prepare a reviewable spec and contract for this change, then identify the evidence needed for its PR.'
