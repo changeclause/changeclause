@@ -1,6 +1,8 @@
 # Contributing to ChangeClause
 
-Before contributing, read [NOTICE](NOTICE). Licensing and contribution terms are not finalized; public visibility is not an open-source license grant.
+Before contributing, read [LICENSE](LICENSE) and [NOTICE](NOTICE). ChangeClause uses PolyForm Perimeter 1.0.1, a source-available license that restricts providing competing products, including free competing products.
+
+Submit only material you have the right to contribute. Unless separately agreed in writing, contributions submitted for inclusion are offered under the same PolyForm Perimeter 1.0.1 terms. No copyright assignment or additional proprietary relicensing rights are implied. Identify third-party code and its license in your PR.
 
 ## Development
 

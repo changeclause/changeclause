@@ -36,7 +36,7 @@ pnpm build
 pnpm demo
 ```
 
-Packages are not yet published to npm; use this source checkout. See [NOTICE](NOTICE) for the current licensing status before adopting or redistributing the code.
+Packages are not yet published to npm; use this source checkout. Use is subject to [PolyForm Perimeter 1.0.1](LICENSE); see the [license summary](#license).
 
 To run the six execution-based examples:
 
@@ -96,4 +96,8 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development commands and PR conventio
 
 ## License
 
-No open-source license has been selected. Source visibility does not grant general permission to use, modify, or redistribute the software. See [NOTICE](NOTICE). Third-party dependencies retain their own licenses.
+ChangeClause is **source-available under the [PolyForm Perimeter License 1.0.1](LICENSE)**.
+
+You may use it internally, including in a business, and modify and redistribute it for purposes permitted by the license. You may not use it to provide others with a competing product, including a competing hosted service or a free competing product. The full license controls; this summary does not change its terms.
+
+This is not an OSI-approved open-source license. Preserve the license and [required notices](NOTICE) when redistributing. Third-party dependencies retain their own licenses. For permissions beyond these terms, contact the maintainers through [changeclause.com](https://changeclause.com).
