@@ -13,7 +13,9 @@ Node 24 is required. The build reads public Markdown, never arbitrary repository
 
 ## Cloudflare
 
-Create a Workers static-assets project named `changeclause-docs` connected to this public repository. Select `main`, root directory `/docs-site`, build command `npm run build`, and deploy command `npx wrangler deploy`. Use Node 24. Disable non-production branch builds unless preview deployment is explicitly wanted. `wrangler.jsonc` declares the `changeclause.dev` custom domain. Attach it in the matching Cloudflare account; the zone must be active before certificates can be issued.
+The documentation is live at [changeclause.dev](https://changeclause.dev/). The existing Workers static-assets project `changeclause-docs` is connected to this public repository: pushes to `main` build from `docs-site` using `npm run build`, then deploy with `npx wrangler deploy`. The build environment sets `NODE_VERSION=24`, and non-production branch builds are disabled.
+
+To recreate the deployment, use those settings and connect the repository through the existing Cloudflare GitHub integration. `wrangler.jsonc` declares the `changeclause.dev` custom domain; its zone must be active in the deployment account. Do not create a duplicate Worker when updating the existing site.
 
 The docs need no runtime secrets, database, email provider, or code execution. Keep the private marketing website's credentials out of this project. The plain static-asset Worker does not require a JavaScript entry point. Run `npx wrangler deploy --dry-run` to check deployment packaging.
 
