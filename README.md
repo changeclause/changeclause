@@ -6,9 +6,9 @@
 
 A code diff shows what changed. A change contract records what was supposed to change.
 
-ChangeClause helps developers review TypeScript and JavaScript changes against explicit requirements. Run it locally to find missing obligations, unexpected dependencies, changes outside the agreed scope, and missing test evidence.
+ChangeClause helps developers plan changes around explicit requirements and review TypeScript and JavaScript implementations against supported checks. Run it locally to find missing obligations, unexpected dependencies, changes outside the agreed scope, and missing test evidence.
 
-**Version 0.1.2 · Early evaluation release.** Review and verification require no account, LLM, or hosted service.
+**Version 0.1.3 · Early evaluation release.** Review and verification require no account, LLM, or hosted service.
 
 ## See what it catches
 
@@ -56,7 +56,7 @@ This compares the merge base with the head commit. It reads committed files with
 
 ## Use with a coding agent
 
-The bundled [ChangeClause skill](docs/agent-integration.md) guides Codex and Claude Code through project setup, proposed specs, contract authoring and PR evidence reports. It includes shared templates and a worked example. Start with an advisory integration and keep unsupported criteria visible.
+The bundled [ChangeClause skill](docs/agent-integration.md) guides Codex and Claude Code from planning and agreed specs through scoped implementation, contract authoring and verification. Start before code or a PR exists; use the spec to keep work tied to the requested outcome and leave unrelated changes out. It includes shared templates and a worked example. Start with an advisory integration and keep unsupported criteria visible.
 
 ## What you can check
 

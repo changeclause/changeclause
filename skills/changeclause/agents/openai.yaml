@@ -1,4 +1,4 @@
 interface:
   display_name: 'ChangeClause'
-  short_description: 'Draft change specs and review PR evidence'
-  default_prompt: 'Use $changeclause to prepare a reviewable spec and contract for this change, then identify the evidence needed for its PR.'
+  short_description: 'Plan scoped changes and develop against agreed intent'
+  default_prompt: 'Use $changeclause to plan this change: draft the outcome, acceptance criteria, scope, non-goals and bounded work plan before implementation.'

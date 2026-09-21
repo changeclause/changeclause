@@ -16,6 +16,21 @@ Intent: validate email, store subscriptions, propagate storage failures, leave t
 | AC-6 | The existing health API remains stable                     | health-api                       | Explicit API signature preservation. This does not establish unchanged runtime behavior.                                              |
 | AC-7 | Only agreed implementation/test/configuration paths change | $scope                           | Exact allowed paths in the example contract; add spec/contract/integration paths explicitly when adopting in a Git PR.                |
 
+## Bounded work plan before coding
+
+This plan can be discussed and agreed before there is an implementation or PR. The fixture paths below are known for this example; in a new project, mark unknown paths as provisional instead of inventing exact selectors.
+
+| Work item                                 | Criteria         | Intended area                                | Planned completion check                                       |
+| ----------------------------------------- | ---------------- | -------------------------------------------- | -------------------------------------------------------------- |
+| Implement validation and storage behavior | AC-2, AC-3, AC-4 | src/newsletter.ts                            | Assertions for storage, invalid input and storage failure      |
+| Connect the exported handler              | AC-1             | src/handler.ts                               | Review static delegation and separately check reachability     |
+| Add meaningful behavioral tests           | AC-2, AC-3, AC-4 | src/newsletter.test.ts                       | Tests fail for deliberately missing behavior                   |
+| Check boundaries and preservation         | AC-5, AC-6, AC-7 | Agreed changed paths and baseline health API | Dependency/scope/signature checks plus remaining manual review |
+
+Non-goals for this example: authentication integration, unrelated health-handler cleanup, UI work and deployment. If implementation reveals that a new dependency or wider behavior change is necessary, propose that revision before taking on the expanded work. A passing check would not justify an unrelated edit within an allowed file.
+
+At a checkpoint or session handoff, record progress against these criteria, distinguish planned checks from observed results, and identify the next bounded action. Use the [change-progress template](../../skills/changeclause/assets/change-progress.md) without requiring a PR. Intent agreement and implementation progress are separate from successful verification.
+
 ## Baseline and evidence plan
 
 Use `fixtures/before` as the fixture baseline. `fixtures/good`, `incomplete`, and `drift` show different candidate outcomes. `pnpm qualify` explicitly runs Vitest and verifies six conformance cases and two known-limit cases. This fixture harness uses directory mode and the supplied contract as both candidate and selected intent for demonstration; it is not independent human approval.
