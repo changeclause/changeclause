@@ -18,10 +18,10 @@ export const pages = [
   {
     slug: 'first-pr',
     file: 'docs/workflows.md',
-    title: 'Your first PR',
+    title: 'Plan and verify a change',
     group: 'Start here',
     description:
-      'Select approved intent, prepare test evidence, and verify a committed pull request.',
+      'Plan scoped work, preserve agreed intent, and verify a change with fresh evidence.',
   },
   {
     slug: 'agents',
@@ -29,7 +29,7 @@ export const pages = [
     title: 'Coding agent integration',
     group: 'Start here',
     description:
-      'Install the ChangeClause skill and prepare reviewable specs, contracts and PR evidence.',
+      'Plan changes, guide implementation with agreed specs, and verify supported obligations.',
   },
   {
     slug: 'examples',

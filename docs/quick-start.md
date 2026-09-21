@@ -2,7 +2,7 @@
 
 ChangeClause checks a code change against a written contract: what must exist, what must stay the same, and what must remain out of scope. Start with the included TypeScript example, then try a bounded change in your own repository.
 
-This is **v0.1.2, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
+This is **v0.1.3, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
 
 ## Install from source
 
@@ -52,7 +52,7 @@ This reads the merge-base-to-head change without checking out or running the tar
 
 - [Use with a coding agent](agent-integration.md): install the skill and draft reviewable specs, contracts and PR reports.
 
-- [Your first PR](workflows.md): select intent, prepare evidence, explicitly run tests, and verify.
+- [Plan and verify a change](workflows.md): agree intent before coding, guide implementation, then gather evidence and verify.
 - [Actual CI examples](ci-examples.md): both PRs pass their tests; one violates the declared boundary.
 - [Contract reference](architecture/change-contract.md): schema 0.2 clauses and evaluation rules.
 - [Supported scope](limitations.md): know which questions still need manual review.

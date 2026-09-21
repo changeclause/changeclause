@@ -1,4 +1,8 @@
-# First PR workflow
+# Plan, implement and verify a change
+
+Begin with the requested outcome, acceptance criteria, boundaries and non-goals. A human-readable spec can be agreed during planning, before a PR, implementation or executable contract exists. Map the work plan to those criteria and keep technical details provisional where needed. During implementation, use the active spec at meaningful checkpoints, avoid incidental changes, and propose material scope revisions explicitly.
+
+The [agent skill](agent-integration.md) supports that lifecycle and local handoff. The Git PR sequence below is one later verification path; a PR is not required for planning or development. Directory comparisons are available for explicit local snapshots, with no Git revision identity. Do not interpret checks of committed HEAD as checks of uncommitted edits.
 
 Start with a bounded TypeScript change. Inspect framework/configuration support and review the ordinary diff. Unsupported files still participate in inventory and scope, but need manual semantic review.
 

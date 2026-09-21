@@ -1,6 +1,6 @@
 # Evidence and review
 
-Follow `docs/workflows.md` in the matching release checkout for the complete supported commands. The sequence below is for a committed Git PR using Vitest. Do not execute target tests/configuration merely to inspect a PR: test execution must be within the user's authorized work.
+Follow `docs/workflows.md` in the matching release checkout for the complete supported commands. Verification is a later stage of the planning/development workflow and does not require a PR. The command sequence below is the committed Git PR variant using Vitest; use exact Git comparison or explicit directory snapshots as appropriate for local changes, following `docs/workflows.md`. Directory evidence has no Git revision identity. Never present committed-HEAD results as coverage of uncommitted edits. Do not execute target tests/configuration merely to inspect a PR: test execution must be within the user's authorized work.
 
 ## Select immutable inputs
 
@@ -52,9 +52,9 @@ Do not continue to evidence-backed claims if preparation or import failed. If wr
 
 Evidence is bound to the approved contract and candidate source/revision. Any source, contract or head change needs a fresh preparation and test run. Do not edit manifests, reuse stale reports, or switch between Git and directory evidence modes. Imported evidence is self-attested, not authenticated CI attestation.
 
-## Write the PR report
+## Report the evaluated change
 
-Fill `../assets/pr-summary.md` from actual artifacts and the criterion mapping. Keep CLI status exactly as emitted, including combined statuses. Exit 0 means declared checks pass; exit 1 is a known failed obligation; exit 2 indicates UNKNOWN or ERROR. UNKNOWN needs a scoped supported check, more evidence, or an explicitly recorded manual disposition. Manual acceptance does not rewrite the automated result.
+Use `../assets/change-progress.md` for local checkpoints and `../assets/pr-summary.md` when a PR exists, filled from actual artifacts and the criterion mapping. Keep CLI status exactly as emitted, including combined statuses. Exit 0 means declared checks pass; exit 1 is a known failed obligation; exit 2 indicates UNKNOWN or ERROR. UNKNOWN needs a scoped supported check, more evidence, or an explicitly recorded manual disposition. Manual acceptance does not rewrite the automated result.
 
 Read changed test assertions, configuration, `assessment`, diagnostics and the full inventory, including unsupported files. Check route reachability/framework behavior separately where relevant. Named passing tests and static calls alone do not establish behavioral correctness. Report missing mandatory coverage even when the CLI returns PASS.
 
