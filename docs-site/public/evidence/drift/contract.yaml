@@ -1,0 +1,46 @@
+schema: '0.2'
+change:
+  name: Newsletter signup with executed evidence
+  intent: Validate email and store subscriptions without authentication coupling.
+scope:
+  allowed:
+    [src/newsletter.ts, src/handler.ts, src/newsletter.test.ts, tsconfig.json]
+requires:
+  - id: handler
+    match: { kind: api, file: src/handler.ts, name: post }
+  - id: handler-calls-subscribe
+    match:
+      {
+        kind: resolved-call,
+        file: src/handler.ts,
+        from: 'src/handler.ts#post',
+        to: 'src/newsletter.ts#subscribe',
+      }
+forbids:
+  - id: no-auth-boundary
+    match:
+      {
+        kind: dependency,
+        file: src/newsletter.ts,
+        to: src/auth.ts,
+        typeOnly: false,
+      }
+preserves:
+  - id: health-api
+    match: { kind: api, file: src/health.ts, name: health }
+evidence:
+  - id: stores-email
+    stage: test
+    method: execution
+    scenario: successful_signup
+    file: src/newsletter.test.ts
+  - id: rejects-invalid-email
+    stage: test
+    method: execution
+    scenario: invalid_email
+    file: src/newsletter.test.ts
+  - id: propagates-storage-failure
+    stage: test
+    method: execution
+    scenario: storage_failure
+    file: src/newsletter.test.ts

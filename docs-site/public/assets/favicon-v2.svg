@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title id="title">ChangeClause bracket and colon mark</title>
+  <rect width="64" height="64" fill="#f9faf7"/>
+  <path fill="#182b29" d="M10 16h9v4h-5v24h5v4h-9zM45 16h9v32h-9v-4h5V20h-5z"/>
+  <path fill="#a83e27" d="M30 25h4v4h-4zM30 35h4v4h-4z"/>
+</svg>

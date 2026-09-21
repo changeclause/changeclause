@@ -1,0 +1,1355 @@
+{
+  "schema": "0.2",
+  "version": "0.1.0",
+  "contractDigest": "sha256:d5a6a1c478e6e470320ddce3f72809aca2c387ed12cc2d816332cc51c324e4c4",
+  "candidateContractDigest": "sha256:d5a6a1c478e6e470320ddce3f72809aca2c387ed12cc2d816332cc51c324e4c4",
+  "base": "git:d93bb6b5e87757392292d74ff7021f480a13d66d:sha256:5469a50fd4f8986f929dcc7b7e15640dfa981bc27724a0cc0fe0f03e0c90b3b4",
+  "head": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+  "status": "DRIFT",
+  "exitCode": 1,
+  "results": [
+    {
+      "id": "$intent",
+      "clause": "intent",
+      "status": "PASS",
+      "facts": [],
+      "message": "Candidate matches the explicitly selected contract. Selection is local, not authenticated approval."
+    },
+    {
+      "id": "$scope",
+      "clause": "scope",
+      "status": "PASS",
+      "facts": [],
+      "message": "Every inventoried changed path is within the allowed scope."
+    },
+    {
+      "id": "handler",
+      "clause": "requires",
+      "status": "PASS",
+      "message": "Required fact observed in head.",
+      "facts": [
+        {
+          "id": "api:4e42cc74125a3bcd21931a8451571a6a9bd6925642ffc9aa357cc6826f477274",
+          "kind": "api",
+          "file": "src/handler.ts",
+          "name": "post",
+          "fingerprint": "8a214dacadfc849747dc0671177621436dea4239eebb00b212dcb14ebc7f98a3",
+          "provenance": {
+            "provider": "typescript",
+            "version": "0.1.0/ts-5.9.3",
+            "file": "src/handler.ts",
+            "line": 3,
+            "stage": "implementation",
+            "method": "typescript-ast",
+            "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+            "trust": "static-analysis"
+          }
+        }
+      ]
+    },
+    {
+      "id": "handler-calls-subscribe",
+      "clause": "requires",
+      "status": "PASS",
+      "message": "Required fact observed in head.",
+      "facts": [
+        {
+          "id": "resolved-call:f75f9441bb935c5e74fa6dbcfe5d1018cdf80d94c466253f5320f9f87775f7a8",
+          "kind": "resolved-call",
+          "file": "src/handler.ts",
+          "name": "src/newsletter.ts#subscribe",
+          "from": "src/handler.ts#post",
+          "to": "src/newsletter.ts#subscribe",
+          "fingerprint": "d5fe07aa3a8599bfd7612b7a776825b01c174be2f46423b0a1e7d8d2f1746aca",
+          "provenance": {
+            "provider": "typescript",
+            "version": "0.1.0/ts-5.9.3",
+            "file": "src/handler.ts",
+            "line": 7,
+            "stage": "implementation",
+            "method": "typescript-ast",
+            "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+            "trust": "static-analysis"
+          }
+        }
+      ]
+    },
+    {
+      "id": "no-auth-boundary",
+      "clause": "forbids",
+      "status": "DRIFT",
+      "message": "Forbidden fact observed in head.",
+      "facts": [
+        {
+          "id": "dependency:e840c5b118b7928e79230c2ea14238a9a6c5d79b2ef2f6f181bc824bf6496611",
+          "kind": "dependency",
+          "file": "src/newsletter.ts",
+          "name": "src/auth.ts",
+          "from": "src/newsletter.ts",
+          "to": "src/auth.ts",
+          "typeOnly": false,
+          "fingerprint": "63a7a62bb5a8325cecf76ac18ea320b6eb45e634111c512002df4bfb465158f0",
+          "provenance": {
+            "provider": "typescript",
+            "version": "0.1.0/ts-5.9.3",
+            "file": "src/newsletter.ts",
+            "line": 1,
+            "stage": "implementation",
+            "method": "typescript-ast",
+            "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+            "trust": "static-analysis"
+          }
+        }
+      ]
+    },
+    {
+      "id": "health-api",
+      "clause": "preserves",
+      "status": "PASS",
+      "message": "Baseline facts preserved exactly; additions permitted.",
+      "facts": [
+        {
+          "id": "api:ca6bd173814b3b3f320be98c7973380e6bd9e4d19b1bd1c6a709966a728ee63a",
+          "kind": "api",
+          "file": "src/health.ts",
+          "name": "health",
+          "fingerprint": "e4040dca2c064cb37f867dc20029984d1906c173ff71cfdcc279d6fa75b0913b",
+          "provenance": {
+            "provider": "typescript",
+            "version": "0.1.0/ts-5.9.3",
+            "file": "src/health.ts",
+            "line": 1,
+            "stage": "implementation",
+            "method": "typescript-ast",
+            "subject": "git:d93bb6b5e87757392292d74ff7021f480a13d66d:sha256:5469a50fd4f8986f929dcc7b7e15640dfa981bc27724a0cc0fe0f03e0c90b3b4",
+            "trust": "static-analysis"
+          }
+        },
+        {
+          "id": "api:ca6bd173814b3b3f320be98c7973380e6bd9e4d19b1bd1c6a709966a728ee63a",
+          "kind": "api",
+          "file": "src/health.ts",
+          "name": "health",
+          "fingerprint": "e4040dca2c064cb37f867dc20029984d1906c173ff71cfdcc279d6fa75b0913b",
+          "provenance": {
+            "provider": "typescript",
+            "version": "0.1.0/ts-5.9.3",
+            "file": "src/health.ts",
+            "line": 1,
+            "stage": "implementation",
+            "method": "typescript-ast",
+            "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+            "trust": "static-analysis"
+          }
+        }
+      ]
+    },
+    {
+      "id": "stores-email",
+      "clause": "evidence",
+      "status": "PASS",
+      "facts": [],
+      "message": "Scenario passed in a locally self-attested run; behavioral completeness remains a review judgment.",
+      "evidence": {
+        "artifactDigest": "sha256:deb37f4f05c77c04e003d2c2493d6d79a13aa5c0a11b393c7aa2d2484c5c5e63",
+        "trust": "self-attested",
+        "file": "src/newsletter.test.ts",
+        "scenario": "successful_signup",
+        "status": "passed"
+      }
+    },
+    {
+      "id": "rejects-invalid-email",
+      "clause": "evidence",
+      "status": "PASS",
+      "facts": [],
+      "message": "Scenario passed in a locally self-attested run; behavioral completeness remains a review judgment.",
+      "evidence": {
+        "artifactDigest": "sha256:deb37f4f05c77c04e003d2c2493d6d79a13aa5c0a11b393c7aa2d2484c5c5e63",
+        "trust": "self-attested",
+        "file": "src/newsletter.test.ts",
+        "scenario": "invalid_email",
+        "status": "passed"
+      }
+    },
+    {
+      "id": "propagates-storage-failure",
+      "clause": "evidence",
+      "status": "PASS",
+      "facts": [],
+      "message": "Scenario passed in a locally self-attested run; behavioral completeness remains a review judgment.",
+      "evidence": {
+        "artifactDigest": "sha256:deb37f4f05c77c04e003d2c2493d6d79a13aa5c0a11b393c7aa2d2484c5c5e63",
+        "trust": "self-attested",
+        "file": "src/newsletter.test.ts",
+        "scenario": "storage_failure",
+        "status": "passed"
+      }
+    }
+  ],
+  "comparison": {
+    "mode": "pr",
+    "requestedBase": "d93bb6b5e87757392292d74ff7021f480a13d66d",
+    "base": "d93bb6b5e87757392292d74ff7021f480a13d66d",
+    "head": "afafd53617e91cfc2b3298200e857b20e2cb8deb"
+  },
+  "files": [
+    {
+      "path": "src/handler.ts",
+      "change": "added",
+      "after": {
+        "path": "src/handler.ts",
+        "digest": "8b013975b5350ad5302f0969c61624c122238392b0c7bf4f5bf97a7ddb177746",
+        "size": 226,
+        "mode": "100644",
+        "category": "source"
+      }
+    },
+    {
+      "path": "src/newsletter.test.ts",
+      "change": "added",
+      "after": {
+        "path": "src/newsletter.test.ts",
+        "digest": "be68dc2cdf63891ae336790a2696c48f0d8f64c91401dd620548889b9d9b4231",
+        "size": 802,
+        "mode": "100644",
+        "category": "source"
+      }
+    },
+    {
+      "path": "src/newsletter.ts",
+      "change": "added",
+      "after": {
+        "path": "src/newsletter.ts",
+        "digest": "d07ac6b86a00a55ec80f77b30d1fe59567c5fa87c9803c4a8acfe09f8e2a6aaa",
+        "size": 344,
+        "mode": "100644",
+        "category": "source"
+      }
+    }
+  ],
+  "coverage": {
+    "meaning": "Declared contract conformance; not proof of all PR behavior.",
+    "unmodeledChangedFiles": [],
+    "diagnostics": 6,
+    "excludedDirectoryScopes": [
+      "node_modules",
+      ".git",
+      "dist",
+      "build",
+      "coverage",
+      ".next",
+      ".pnpm-store"
+    ]
+  },
+  "analysis": {
+    "provider": "typescript",
+    "version": "0.1.0/ts-5.9.3",
+    "base": {
+      "coverage": {
+        "files": [
+          "scripts/report-checks.mjs",
+          "scripts/report.mjs",
+          "scripts/verify.mjs",
+          "src/auth.ts",
+          "src/health.ts",
+          "src/storage.ts"
+        ],
+        "capabilities": [
+          "symbol",
+          "import",
+          "call-site",
+          "test-definition",
+          "dependency",
+          "resolved-call",
+          "api"
+        ],
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".mts",
+          ".cts",
+          ".js",
+          ".jsx",
+          ".mjs",
+          ".cjs"
+        ],
+        "excludedDirectories": [
+          "node_modules",
+          ".git",
+          "dist",
+          "build",
+          "coverage",
+          ".next",
+          ".pnpm-store"
+        ]
+      },
+      "diagnostics": [
+        {
+          "file": "scripts/report-checks.mjs",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        },
+        {
+          "file": "scripts/report.mjs",
+          "capability": "api",
+          "blocking": false,
+          "message": "Export formatSummary is outside explicit function/type signature coverage."
+        },
+        {
+          "file": "scripts/report.mjs",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        },
+        {
+          "file": "scripts/verify.mjs",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        }
+      ]
+    },
+    "head": {
+      "coverage": {
+        "files": [
+          "scripts/report-checks.mjs",
+          "scripts/report.mjs",
+          "scripts/verify.mjs",
+          "src/auth.ts",
+          "src/handler.ts",
+          "src/health.ts",
+          "src/newsletter.test.ts",
+          "src/newsletter.ts",
+          "src/storage.ts"
+        ],
+        "capabilities": [
+          "symbol",
+          "import",
+          "call-site",
+          "test-definition",
+          "dependency",
+          "resolved-call",
+          "api"
+        ],
+        "extensions": [
+          ".ts",
+          ".tsx",
+          ".mts",
+          ".cts",
+          ".js",
+          ".jsx",
+          ".mjs",
+          ".cjs"
+        ],
+        "excludedDirectories": [
+          "node_modules",
+          ".git",
+          "dist",
+          "build",
+          "coverage",
+          ".next",
+          ".pnpm-store"
+        ]
+      },
+      "diagnostics": [
+        {
+          "file": "scripts/report-checks.mjs",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        },
+        {
+          "file": "scripts/report.mjs",
+          "capability": "api",
+          "blocking": false,
+          "message": "Export formatSummary is outside explicit function/type signature coverage."
+        },
+        {
+          "file": "scripts/report.mjs",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        },
+        {
+          "file": "scripts/verify.mjs",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        },
+        {
+          "file": "src/newsletter.test.ts",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        },
+        {
+          "file": "src/newsletter.ts",
+          "capability": "resolved-call",
+          "blocking": false,
+          "message": "Some calls have external, interface, or dynamic targets; resolved-call absence cannot be established."
+        }
+      ]
+    }
+  },
+  "observations": [
+    {
+      "change": "added",
+      "kind": "api",
+      "id": "api:4e42cc74125a3bcd21931a8451571a6a9bd6925642ffc9aa357cc6826f477274",
+      "after": {
+        "id": "api:4e42cc74125a3bcd21931a8451571a6a9bd6925642ffc9aa357cc6826f477274",
+        "kind": "api",
+        "file": "src/handler.ts",
+        "name": "post",
+        "fingerprint": "8a214dacadfc849747dc0671177621436dea4239eebb00b212dcb14ebc7f98a3",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 3,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "api",
+      "id": "api:dfc8505ba1b1f709b10dc74c0d7aad93c3c4cd438e5b014f09394bc2ac15934a",
+      "after": {
+        "id": "api:dfc8505ba1b1f709b10dc74c0d7aad93c3c4cd438e5b014f09394bc2ac15934a",
+        "kind": "api",
+        "file": "src/newsletter.ts",
+        "name": "subscribe",
+        "fingerprint": "8a214dacadfc849747dc0671177621436dea4239eebb00b212dcb14ebc7f98a3",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 3,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:37d72e5c80f13cc3161863103961e36c08e621c28a389ed35ec157cb127abfd0",
+      "after": {
+        "id": "call-site:37d72e5c80f13cc3161863103961e36c08e621c28a389ed35ec157cb127abfd0",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "expect(writes).toBe",
+        "from": "src/newsletter.test.ts",
+        "to": "expect(writes).toBe",
+        "fingerprint": "8f7d9437366f0ca8505eef8c0aa59b1689eebc2cb7a63669becc577d48875bb0",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 23,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:3efad7c1eb3b21949f35a4171fd393b5c1464e0ecf01e583013835a93087f13b",
+      "after": {
+        "id": "call-site:3efad7c1eb3b21949f35a4171fd393b5c1464e0ecf01e583013835a93087f13b",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "test",
+        "from": "src/newsletter.test.ts",
+        "to": "test",
+        "fingerprint": "d60a9c413f944d3f9f8bbe7bb252769ff320fd0297558e0bced4414d0668ccba",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 3,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:4b0f1f75e58ae53e91ea7a61f0529929e03f62f06a4ddfa4aa815ab88a691c23",
+      "after": {
+        "id": "call-site:4b0f1f75e58ae53e91ea7a61f0529929e03f62f06a4ddfa4aa815ab88a691c23",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "expect(post('not-an-email', {\n    put: async () => {\n        writes++;\n    },\n})).rejects.toThrow",
+        "from": "src/newsletter.test.ts",
+        "to": "expect(post('not-an-email', {\n    put: async () => {\n        writes++;\n    },\n})).rejects.toThrow",
+        "fingerprint": "abdaf1b063cc349e69a0d2a917e33dce7ef80e109dec7986102006f522886ea7",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 16,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:54373f9d843e0668502c790075935296df3528f4d905c5cebb85246e6e64a0d4",
+      "after": {
+        "id": "call-site:54373f9d843e0668502c790075935296df3528f4d905c5cebb85246e6e64a0d4",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "expect(post('peer@example.com', {\n    put: async () => {\n        throw new Error('storage unavailable');\n    },\n})).rejects.toThrow",
+        "from": "src/newsletter.test.ts",
+        "to": "expect(post('peer@example.com', {\n    put: async () => {\n        throw new Error('storage unavailable');\n    },\n})).rejects.toThrow",
+        "fingerprint": "97d966948e7cff5fa16cf67a18a1f6bd668ac0e8549626a4260848a6ca59adc7",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 26,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:543e3f7fc350d8a761ef48f2dad2aa62663f844f93cbeab4eeb4ff83865dfceb",
+      "after": {
+        "id": "call-site:543e3f7fc350d8a761ef48f2dad2aa62663f844f93cbeab4eeb4ff83865dfceb",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "expect(emails).toEqual",
+        "from": "src/newsletter.test.ts",
+        "to": "expect(emails).toEqual",
+        "fingerprint": "1a09da13b85e123dbc31b84146352e1c312e20570348c24bc3c356a9bd54c860",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 12,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:5e3132fb206b7bb1c18d0e74ab5e14ec991ed5f88a6589768d9fc8c0bdc70495",
+      "after": {
+        "id": "call-site:5e3132fb206b7bb1c18d0e74ab5e14ec991ed5f88a6589768d9fc8c0bdc70495",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "post",
+        "from": "src/newsletter.test.ts",
+        "to": "post",
+        "fingerprint": "9c938ab09b5a2b0f4a9612e2eea548f1dde4531738030f0a0f3f2e7e958df6c7",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 6,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:617b02ba89c8d91677094fc1b6024e98a431bb46a338fdf2f976688a81609ec4",
+      "after": {
+        "id": "call-site:617b02ba89c8d91677094fc1b6024e98a431bb46a338fdf2f976688a81609ec4",
+        "kind": "call-site",
+        "file": "src/newsletter.ts",
+        "name": "sessionTag",
+        "from": "src/newsletter.ts#subscribe",
+        "to": "sessionTag",
+        "fingerprint": "cf36b000a9ceb3165b003a8057e57bd3e97bee96de59072b9610d315d88e30a2",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 9,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:6df9fe73e357a25d512f7a54f1140832f216066cff491933ccd8ebcad9ac556a",
+      "after": {
+        "id": "call-site:6df9fe73e357a25d512f7a54f1140832f216066cff491933ccd8ebcad9ac556a",
+        "kind": "call-site",
+        "file": "src/newsletter.ts",
+        "name": "store.put",
+        "from": "src/newsletter.ts#subscribe",
+        "to": "store.put",
+        "fingerprint": "87a50c2e6f28c8bdac6a85ef48b9f5cf44e548178c1d3abdb8c1a0cb8b5c87bf",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 10,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:9802b459cb08b1ddcff795031691afc950a65f73beebc8de749cd39f338ca202",
+      "after": {
+        "id": "call-site:9802b459cb08b1ddcff795031691afc950a65f73beebc8de749cd39f338ca202",
+        "kind": "call-site",
+        "file": "src/handler.ts",
+        "name": "subscribe",
+        "from": "src/handler.ts#post",
+        "to": "subscribe",
+        "fingerprint": "d5fe07aa3a8599bfd7612b7a776825b01c174be2f46423b0a1e7d8d2f1746aca",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 7,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:a277576e85ebbd418c0f00cf1f19824a66a1c64c62e6df786f348888ace2cdf9",
+      "after": {
+        "id": "call-site:a277576e85ebbd418c0f00cf1f19824a66a1c64c62e6df786f348888ace2cdf9",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "expect(post('peer@example.com', {\n    put: async (email) => {\n        emails.push(email);\n    },\n})).resolves.toBe",
+        "from": "src/newsletter.test.ts",
+        "to": "expect(post('peer@example.com', {\n    put: async (email) => {\n        emails.push(email);\n    },\n})).resolves.toBe",
+        "fingerprint": "953d5f7e48f7ab8d04129783860066ba168870b44923fb307ad007ca686397e1",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 5,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:b0f1247552488c94d90a388b3a28693d407a61b5ebf034ef40d0c50dc189d894",
+      "after": {
+        "id": "call-site:b0f1247552488c94d90a388b3a28693d407a61b5ebf034ef40d0c50dc189d894",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "emails.push",
+        "from": "src/newsletter.test.ts",
+        "to": "emails.push",
+        "fingerprint": "aebd237b0bea138b2877cc9ad2d846e0b1abd8876099379918d1249d85a98aaa",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 8,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:b7c4266ac1169ccfd1e50ce7d9dd38b1f859adb549a0ee9d5b77c3b0daa0167e",
+      "after": {
+        "id": "call-site:b7c4266ac1169ccfd1e50ce7d9dd38b1f859adb549a0ee9d5b77c3b0daa0167e",
+        "kind": "call-site",
+        "file": "src/newsletter.ts",
+        "name": "/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test",
+        "from": "src/newsletter.ts#subscribe",
+        "to": "/^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$/.test",
+        "fingerprint": "9b9968d38d3c910e51087d34f5322cbd9e809f3d530b51f8d841eced082a27ce",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 7,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "call-site",
+      "id": "call-site:c5f0244bd569b36ee25631ae4d61b57d6ddb823424791d22cac9e916f175b139",
+      "after": {
+        "id": "call-site:c5f0244bd569b36ee25631ae4d61b57d6ddb823424791d22cac9e916f175b139",
+        "kind": "call-site",
+        "file": "src/newsletter.test.ts",
+        "name": "expect",
+        "from": "src/newsletter.test.ts",
+        "to": "expect",
+        "fingerprint": "743e0ecd0f6fd9d5c5603e9c7fffbf8bee230cf557bc881d1415a224746e0c36",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 5,
+          "stage": "implementation",
+          "method": "syntactic-call-site",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:0594e91b1e9c898d478630c14560bfdc8b82671032aa48371f9f2594cc78d1d0",
+      "after": {
+        "id": "dependency:0594e91b1e9c898d478630c14560bfdc8b82671032aa48371f9f2594cc78d1d0",
+        "kind": "dependency",
+        "file": "src/newsletter.ts",
+        "name": "src/storage.ts",
+        "from": "src/newsletter.ts",
+        "to": "src/storage.ts",
+        "typeOnly": true,
+        "fingerprint": "d227f7bcdc533c8749c212449c511462360c3872add0f69a8eab173b66ebe128",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:15a8be5ffefe981f3d3e4776a4bd9cdac919b8b04cba8769c2074d3e0e8171cc",
+      "after": {
+        "id": "dependency:15a8be5ffefe981f3d3e4776a4bd9cdac919b8b04cba8769c2074d3e0e8171cc",
+        "kind": "dependency",
+        "file": "src/newsletter.test.ts",
+        "name": "src/newsletter.ts",
+        "from": "src/newsletter.test.ts",
+        "to": "src/newsletter.ts",
+        "typeOnly": false,
+        "fingerprint": "20d59124de4ec7c80280eea8c6df1f4642242084074931a32eb9c6389f1082dc",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "static-transitive-module-path",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:2c5106106ca14b649f19f7474f839ef0a328ef1be0c96e11ea3574825ae85bc6",
+      "after": {
+        "id": "dependency:2c5106106ca14b649f19f7474f839ef0a328ef1be0c96e11ea3574825ae85bc6",
+        "kind": "dependency",
+        "file": "src/handler.ts",
+        "name": "src/storage.ts",
+        "from": "src/handler.ts",
+        "to": "src/storage.ts",
+        "typeOnly": true,
+        "fingerprint": "d227f7bcdc533c8749c212449c511462360c3872add0f69a8eab173b66ebe128",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:75c1d67ce44fb688e624fae8fbc980b9f420d2a1183935914b7b2f7eb75c3e9f",
+      "after": {
+        "id": "dependency:75c1d67ce44fb688e624fae8fbc980b9f420d2a1183935914b7b2f7eb75c3e9f",
+        "kind": "dependency",
+        "file": "src/newsletter.test.ts",
+        "name": "external:vitest",
+        "from": "src/newsletter.test.ts",
+        "to": "external:vitest",
+        "typeOnly": false,
+        "fingerprint": "36f02aada1b1cce2e26edd6f190c13d1a202b5cec04ab4ea6563a1fea185f818",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:7dbcd4bf62c81ccf23d50e5fdf317c3f36af2ca663495fac3bfe4f2b5e70d204",
+      "after": {
+        "id": "dependency:7dbcd4bf62c81ccf23d50e5fdf317c3f36af2ca663495fac3bfe4f2b5e70d204",
+        "kind": "dependency",
+        "file": "src/newsletter.test.ts",
+        "name": "src/auth.ts",
+        "from": "src/newsletter.test.ts",
+        "to": "src/auth.ts",
+        "typeOnly": false,
+        "fingerprint": "266498a2d72fa81dade9e8d8f932c32d6e6a5754c08501d6912d6f239666c666",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "static-transitive-module-path",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:8ad43da67153b0a7c0cf3540d3a78f9daf8616a1d5d02ea81fbfdeaf6ae784d4",
+      "after": {
+        "id": "dependency:8ad43da67153b0a7c0cf3540d3a78f9daf8616a1d5d02ea81fbfdeaf6ae784d4",
+        "kind": "dependency",
+        "file": "src/handler.ts",
+        "name": "src/auth.ts",
+        "from": "src/handler.ts",
+        "to": "src/auth.ts",
+        "typeOnly": false,
+        "fingerprint": "266498a2d72fa81dade9e8d8f932c32d6e6a5754c08501d6912d6f239666c666",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "static-transitive-module-path",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:930de7aa1aacae3661adbdf974e464f2bc809a5c0da259ac528f8561ab16b022",
+      "after": {
+        "id": "dependency:930de7aa1aacae3661adbdf974e464f2bc809a5c0da259ac528f8561ab16b022",
+        "kind": "dependency",
+        "file": "src/newsletter.test.ts",
+        "name": "src/storage.ts",
+        "from": "src/newsletter.test.ts",
+        "to": "src/storage.ts",
+        "typeOnly": true,
+        "fingerprint": "a037eead3fb845c200a2e187a89bd3e107c8f9309a51305626a0c9637099053c",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "static-transitive-module-path",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:ab8c5eecc79027ec5b35977bb7445996f16618f4162754dd6c5e4d0f953c8b3d",
+      "after": {
+        "id": "dependency:ab8c5eecc79027ec5b35977bb7445996f16618f4162754dd6c5e4d0f953c8b3d",
+        "kind": "dependency",
+        "file": "src/handler.ts",
+        "name": "src/storage.ts",
+        "from": "src/handler.ts",
+        "to": "src/storage.ts",
+        "typeOnly": true,
+        "fingerprint": "a037eead3fb845c200a2e187a89bd3e107c8f9309a51305626a0c9637099053c",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "static-transitive-module-path",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:b41a6d5807586c35e2521c397033a3100ab363883a4971a945eaa6533bc614d0",
+      "after": {
+        "id": "dependency:b41a6d5807586c35e2521c397033a3100ab363883a4971a945eaa6533bc614d0",
+        "kind": "dependency",
+        "file": "src/newsletter.test.ts",
+        "name": "src/handler.ts",
+        "from": "src/newsletter.test.ts",
+        "to": "src/handler.ts",
+        "typeOnly": false,
+        "fingerprint": "590568a9b3dd59033f2c720aed5dfa132cba3c6f2cdaa6c5b77a7bb9e80e533c",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:dde24480ed0bba659bc6f5272dc56cc140c3b71841d072e06b22c73ea480bcd0",
+      "after": {
+        "id": "dependency:dde24480ed0bba659bc6f5272dc56cc140c3b71841d072e06b22c73ea480bcd0",
+        "kind": "dependency",
+        "file": "src/handler.ts",
+        "name": "src/newsletter.ts",
+        "from": "src/handler.ts",
+        "to": "src/newsletter.ts",
+        "typeOnly": false,
+        "fingerprint": "c26f2377c0d73565501c3a57e2829b1d8a0ff02466b052d6c0d9e6dc08ed964b",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "dependency",
+      "id": "dependency:e840c5b118b7928e79230c2ea14238a9a6c5d79b2ef2f6f181bc824bf6496611",
+      "after": {
+        "id": "dependency:e840c5b118b7928e79230c2ea14238a9a6c5d79b2ef2f6f181bc824bf6496611",
+        "kind": "dependency",
+        "file": "src/newsletter.ts",
+        "name": "src/auth.ts",
+        "from": "src/newsletter.ts",
+        "to": "src/auth.ts",
+        "typeOnly": false,
+        "fingerprint": "63a7a62bb5a8325cecf76ac18ea320b6eb45e634111c512002df4bfb465158f0",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "import",
+      "id": "import:07c6676f9c29543b744be85716d051419c845a9161b583b5708b7878e0f79503",
+      "after": {
+        "id": "import:07c6676f9c29543b744be85716d051419c845a9161b583b5708b7878e0f79503",
+        "kind": "import",
+        "file": "src/newsletter.ts",
+        "name": "./auth.js",
+        "from": "src/newsletter.ts",
+        "to": "./auth.js",
+        "fingerprint": "63a7a62bb5a8325cecf76ac18ea320b6eb45e634111c512002df4bfb465158f0",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "import",
+      "id": "import:14c3acdf69892ba948b777a257fdbb526dcb3b8236e1469c439fbeed98af2f6e",
+      "after": {
+        "id": "import:14c3acdf69892ba948b777a257fdbb526dcb3b8236e1469c439fbeed98af2f6e",
+        "kind": "import",
+        "file": "src/newsletter.ts",
+        "name": "./storage.js",
+        "from": "src/newsletter.ts",
+        "to": "./storage.js",
+        "fingerprint": "d227f7bcdc533c8749c212449c511462360c3872add0f69a8eab173b66ebe128",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "import",
+      "id": "import:7776f1933cb2b7e4739f813e1876c8bc93796cef05c9d69945fc8defd0f50b9e",
+      "after": {
+        "id": "import:7776f1933cb2b7e4739f813e1876c8bc93796cef05c9d69945fc8defd0f50b9e",
+        "kind": "import",
+        "file": "src/handler.ts",
+        "name": "./storage.js",
+        "from": "src/handler.ts",
+        "to": "./storage.js",
+        "fingerprint": "d227f7bcdc533c8749c212449c511462360c3872add0f69a8eab173b66ebe128",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "import",
+      "id": "import:8010ea2f2f6694794f0b6db8d3ff4decc2ddf9d8fbdd09c52d1d9fea020473a3",
+      "after": {
+        "id": "import:8010ea2f2f6694794f0b6db8d3ff4decc2ddf9d8fbdd09c52d1d9fea020473a3",
+        "kind": "import",
+        "file": "src/handler.ts",
+        "name": "./newsletter.js",
+        "from": "src/handler.ts",
+        "to": "./newsletter.js",
+        "fingerprint": "c26f2377c0d73565501c3a57e2829b1d8a0ff02466b052d6c0d9e6dc08ed964b",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "import",
+      "id": "import:ac45e191a6ddde579f109e68448df76e08b7916ab2219f2a36edb40937978a30",
+      "after": {
+        "id": "import:ac45e191a6ddde579f109e68448df76e08b7916ab2219f2a36edb40937978a30",
+        "kind": "import",
+        "file": "src/newsletter.test.ts",
+        "name": "vitest",
+        "from": "src/newsletter.test.ts",
+        "to": "vitest",
+        "fingerprint": "36f02aada1b1cce2e26edd6f190c13d1a202b5cec04ab4ea6563a1fea185f818",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 1,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "import",
+      "id": "import:cb2adbf7d38277e615ad9ff8ce013cfc799a74dfdfa919e69ab875c44ce224ab",
+      "after": {
+        "id": "import:cb2adbf7d38277e615ad9ff8ce013cfc799a74dfdfa919e69ab875c44ce224ab",
+        "kind": "import",
+        "file": "src/newsletter.test.ts",
+        "name": "./handler.js",
+        "from": "src/newsletter.test.ts",
+        "to": "./handler.js",
+        "fingerprint": "590568a9b3dd59033f2c720aed5dfa132cba3c6f2cdaa6c5b77a7bb9e80e533c",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 2,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "resolved-call",
+      "id": "resolved-call:4d2f652e7ce13ca88100cc7083e8044eb832a44a700c1c2a4f85e8817ac61156",
+      "after": {
+        "id": "resolved-call:4d2f652e7ce13ca88100cc7083e8044eb832a44a700c1c2a4f85e8817ac61156",
+        "kind": "resolved-call",
+        "file": "src/newsletter.test.ts",
+        "name": "src/handler.ts#post",
+        "from": "src/newsletter.test.ts",
+        "to": "src/handler.ts#post",
+        "fingerprint": "9c938ab09b5a2b0f4a9612e2eea548f1dde4531738030f0a0f3f2e7e958df6c7",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 6,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "resolved-call",
+      "id": "resolved-call:870fb611df33c6f785e6860c874381d95c9ce84c669409e8a606eae8af03f31f",
+      "after": {
+        "id": "resolved-call:870fb611df33c6f785e6860c874381d95c9ce84c669409e8a606eae8af03f31f",
+        "kind": "resolved-call",
+        "file": "src/newsletter.ts",
+        "name": "src/auth.ts#sessionTag",
+        "from": "src/newsletter.ts#subscribe",
+        "to": "src/auth.ts#sessionTag",
+        "fingerprint": "cf36b000a9ceb3165b003a8057e57bd3e97bee96de59072b9610d315d88e30a2",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 9,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "resolved-call",
+      "id": "resolved-call:f75f9441bb935c5e74fa6dbcfe5d1018cdf80d94c466253f5320f9f87775f7a8",
+      "after": {
+        "id": "resolved-call:f75f9441bb935c5e74fa6dbcfe5d1018cdf80d94c466253f5320f9f87775f7a8",
+        "kind": "resolved-call",
+        "file": "src/handler.ts",
+        "name": "src/newsletter.ts#subscribe",
+        "from": "src/handler.ts#post",
+        "to": "src/newsletter.ts#subscribe",
+        "fingerprint": "d5fe07aa3a8599bfd7612b7a776825b01c174be2f46423b0a1e7d8d2f1746aca",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 7,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "symbol",
+      "id": "symbol:4e42cc74125a3bcd21931a8451571a6a9bd6925642ffc9aa357cc6826f477274",
+      "after": {
+        "id": "symbol:4e42cc74125a3bcd21931a8451571a6a9bd6925642ffc9aa357cc6826f477274",
+        "kind": "symbol",
+        "file": "src/handler.ts",
+        "name": "post",
+        "fingerprint": "ba8a37c48365b1762b0cc4a4470866ccc0117771598b88da874a3438247bb6b9",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/handler.ts",
+          "line": 3,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "symbol",
+      "id": "symbol:dfc8505ba1b1f709b10dc74c0d7aad93c3c4cd438e5b014f09394bc2ac15934a",
+      "after": {
+        "id": "symbol:dfc8505ba1b1f709b10dc74c0d7aad93c3c4cd438e5b014f09394bc2ac15934a",
+        "kind": "symbol",
+        "file": "src/newsletter.ts",
+        "name": "subscribe",
+        "fingerprint": "724dbdce271c926f30cee73493e15d2ad524622d0ebda1f6f04bd646b77cdf95",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.ts",
+          "line": 3,
+          "stage": "implementation",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "test-definition",
+      "id": "test-definition:370a9123567919bd5922457bdfac2138b8d933a538a157f6e262d4650d29e624",
+      "after": {
+        "id": "test-definition:370a9123567919bd5922457bdfac2138b8d933a538a157f6e262d4650d29e624",
+        "kind": "test-definition",
+        "file": "src/newsletter.test.ts",
+        "name": "storage_failure",
+        "fingerprint": "3f4ab2ea65961168d2d48a7d8a9a726daf2fe89dbf020917532eae5ab9de9e39",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 25,
+          "stage": "test",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "test-definition",
+      "id": "test-definition:96191f3281554d28eb8c18755af779a2a82d7d0f60d7e0e70ff9900627437937",
+      "after": {
+        "id": "test-definition:96191f3281554d28eb8c18755af779a2a82d7d0f60d7e0e70ff9900627437937",
+        "kind": "test-definition",
+        "file": "src/newsletter.test.ts",
+        "name": "successful_signup",
+        "fingerprint": "1a5f10748d224325556dae44cf33aaac13337c8464fe4c0e6fe62bfe09eef9d9",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 3,
+          "stage": "test",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    },
+    {
+      "change": "added",
+      "kind": "test-definition",
+      "id": "test-definition:eb4517f114303807fd26436e39818474783bd9b8ec91783a062319a911744da3",
+      "after": {
+        "id": "test-definition:eb4517f114303807fd26436e39818474783bd9b8ec91783a062319a911744da3",
+        "kind": "test-definition",
+        "file": "src/newsletter.test.ts",
+        "name": "invalid_email",
+        "fingerprint": "f3faaab4f859d5bbfa5da7b8861e6c8cd0ede1530255bab82d6fe4af0399b039",
+        "provenance": {
+          "provider": "typescript",
+          "version": "0.1.0/ts-5.9.3",
+          "file": "src/newsletter.test.ts",
+          "line": 14,
+          "stage": "test",
+          "method": "typescript-ast",
+          "subject": "git:afafd53617e91cfc2b3298200e857b20e2cb8deb:sha256:4971f5eeca1bf9b1e73f26cf125f7b55ebd4f3079127b49da0b08463f15fc019",
+          "trust": "static-analysis"
+        }
+      }
+    }
+  ]
+}
