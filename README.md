@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/changeclause/changeclause/actions/workflows/ci.yml/badge.svg)](https://github.com/changeclause/changeclause/actions/workflows/ci.yml)
 
-[Website](https://changeclause.com) · [Developer docs](https://changeclause.dev) · [Quick start](#quick-start) · [Examples](examples/newsletter/README.md) · [Contributing](CONTRIBUTING.md)
+[Website](https://changeclause.com) · [Developer docs](https://changeclause.dev) · [Quick start](#quick-start) · [Examples](examples/newsletter/README.md) · [Live PR examples](https://github.com/changeclause/examples) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
 A code diff shows what changed. A change contract records what was supposed to change.
 

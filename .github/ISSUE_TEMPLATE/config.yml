@@ -1,0 +1,11 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Developer documentation
+    url: https://changeclause.dev/
+    about: Quick start, contract reference, supported scope, and evidence limits.
+  - name: Report a security vulnerability privately
+    url: https://github.com/changeclause/changeclause/security/advisories/new
+    about: Share suspected vulnerabilities privately with repository maintainers.
+  - name: Share a real review example
+    url: https://changeclause.com/share/
+    about: Send a sanitized change or review problem for product evaluation.
