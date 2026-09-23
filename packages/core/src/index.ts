@@ -7,11 +7,18 @@ import {
   type FileEntry,
 } from './inventory.js';
 export * from './inventory.js';
+export * from './checks.js';
+import {
+  claimResult,
+  filePreserveResult,
+  scopeResults,
+  type TestOutcome,
+} from './scope.js';
 import { createHash } from 'node:crypto';
 import { z } from 'zod';
 import { parseDocument } from 'yaml';
 
-export const VERSION = '0.1.3';
+export const VERSION = '0.2.0';
 export const excludedDirectories = [
   'node_modules',
   '.git',
@@ -70,7 +77,10 @@ export type Fact = z.infer<typeof factSchema>;
 export type Kind = z.infer<typeof kindSchema>;
 export type Snapshot = {
   subject: string;
+  /** Source and configuration text that providers analyze. */
   files: Record<string, string>;
+  /** UTF-8 text of every inventoried regular file, for language-independent checks. Binary files are absent. */
+  texts?: Record<string, string>;
   inventory?: FileEntry[];
   revision?: string;
 };
@@ -167,26 +177,39 @@ const evidenceClause = z
     file: relativeFileSchema.optional(),
   })
   .strict();
-export const contractSchema = z
+const globSchema = z
+  .string()
+  .min(1)
+  .refine(
+    (value) =>
+      !value.includes('\\') &&
+      !value.includes(':') &&
+      !value.split('/').some((p) => ['', '.', '..'].includes(p)) &&
+      !value.split('/').some((p) => p.includes('**') && p !== '**'),
+    'Use relative globs with ** only as a complete path segment',
+  );
+function uniqueIds(
+  ids: string[],
+  ctx: { addIssue: (issue: { code: 'custom'; message: string }) => void },
+) {
+  const seen = new Set<string>();
+  for (const id of ids) {
+    if (id.startsWith('$'))
+      ctx.addIssue({
+        code: 'custom',
+        message: 'Clause IDs beginning with $ are reserved',
+      });
+    if (seen.has(id))
+      ctx.addIssue({ code: 'custom', message: `Duplicate clause id: ${id}` });
+    seen.add(id);
+  }
+}
+const legacyContractSchema = z
   .object({
     schema: z.enum(['0.1', '0.2']),
     scope: z
       .object({
-        allowed: z
-          .array(
-            z
-              .string()
-              .min(1)
-              .refine(
-                (value) =>
-                  !value.includes('\\') &&
-                  !value.includes(':') &&
-                  !value.split('/').some((p) => ['', '.', '..'].includes(p)) &&
-                  !value.split('/').some((p) => p.includes('**') && p !== '**'),
-                'Use relative globs with ** only as a complete path segment',
-              ),
-          )
-          .min(1),
+        allowed: z.array(globSchema).min(1),
       })
       .strict()
       .optional(),
@@ -216,22 +239,107 @@ export const contractSchema = z
         code: 'custom',
         message: 'A contract must contain at least one clause',
       });
-    const ids = new Set<string>();
-    for (const c of clauses) {
-      if (c.id.startsWith('$'))
-        ctx.addIssue({
-          code: 'custom',
-          message: 'Clause IDs beginning with $ are reserved',
-        });
-      if (ids.has(c.id))
-        ctx.addIssue({
-          code: 'custom',
-          message: `Duplicate clause id: ${c.id}`,
-        });
-      ids.add(c.id);
-    }
+    uniqueIds(
+      clauses.map((c) => c.id),
+      ctx,
+    );
   });
+/** A file rule: matching paths must not see the listed kinds of change. */
+export const fileSelectorSchema = z
+  .object({
+    kind: z.literal('file'),
+    path: globSchema,
+    change: z
+      .array(z.enum(['add', 'modify', 'delete']))
+      .min(1)
+      .default(['modify', 'delete']),
+  })
+  .strict();
+export type FileSelector = z.infer<typeof fileSelectorSchema>;
+const preserveClause = z
+  .object({
+    id: z.string().min(1),
+    description: z.string().optional(),
+    match: z.union([fileSelectorSchema, selectorSchema]),
+  })
+  .strict();
+export const claimEvidenceSchema = z.discriminatedUnion('kind', [
+  z
+    .object({
+      kind: z.literal('test'),
+      file: relativeFileSchema.optional(),
+      name: z.string().min(1),
+    })
+    .strict(),
+  z.object({ kind: z.literal('manual'), note: z.string().min(1) }).strict(),
+]);
+export const claimSchema = z
+  .object({
+    id: z.string().min(1),
+    text: z.string().min(1),
+    files: z.array(globSchema).default([]),
+    evidence: z.array(claimEvidenceSchema).default([]),
+  })
+  .strict();
+export type Claim = z.infer<typeof claimSchema>;
+const scopeContractSchema = z
+  .object({
+    schema: z.literal('0.3'),
+    change: z
+      .object({ name: z.string().min(1), intent: z.string().optional() })
+      .strict(),
+    scope: z
+      .object({
+        allow: z.array(globSchema).default([]),
+        companions: z.array(globSchema).default([]),
+        budget: z
+          .object({
+            files: z.number().int().positive().optional(),
+            lines: z.number().int().positive().optional(),
+          })
+          .strict()
+          .refine(
+            (b) => b.files !== undefined || b.lines !== undefined,
+            'A budget needs files, lines, or both',
+          )
+          .optional(),
+      })
+      .strict(),
+    dependencies: z
+      .object({ allow: z.array(z.string().min(1)).default([]) })
+      .strict()
+      .default({ allow: [] }),
+    requires: z.array(clause).default([]),
+    forbids: z.array(clause).default([]),
+    preserves: z.array(preserveClause).default([]),
+    evidence: z.array(evidenceClause).default([]),
+    claims: z.array(claimSchema).default([]),
+  })
+  .strict()
+  .superRefine((value, ctx) => {
+    if (!value.scope.allow.length && !value.claims.some((c) => c.files.length))
+      ctx.addIssue({
+        code: 'custom',
+        message:
+          'Schema 0.3 needs scope.allow or at least one claim with files',
+      });
+    uniqueIds(
+      [
+        ...value.requires,
+        ...value.forbids,
+        ...value.preserves,
+        ...value.evidence,
+        ...value.claims,
+      ].map((c) => c.id),
+      ctx,
+    );
+  });
+export const contractSchema = z.discriminatedUnion('schema', [
+  legacyContractSchema,
+  scopeContractSchema,
+]);
 export type Contract = z.infer<typeof contractSchema>;
+export type ScopeContract = z.infer<typeof scopeContractSchema>;
 export type Selector = z.infer<typeof selectorSchema>;
 export function parseContract(source: string): Contract {
   const doc = parseDocument(source, { uniqueKeys: true });
@@ -268,7 +376,7 @@ export function diff(base: ProjectModel, head: ProjectModel): Observation[] {
     throw new Error('Incompatible provider models');
   const left = new Map(base.facts.map((f) => [f.id, f]));
   const right = new Map(head.facts.map((f) => [f.id, f]));
-  return [...new Set([...left.keys(), ...right.keys()])]
+  const raw = [...new Set([...left.keys(), ...right.keys()])]
     .sort(compare)
     .flatMap<Observation>((id) => {
       const before = left.get(id),
@@ -303,6 +411,42 @@ export function diff(base: ProjectModel, head: ProjectModel): Observation[] {
         ];
       return [];
     });
+  return pairOccurrences(raw);
+}
+/**
+ * Occurrence facts (one per call) have text-keyed IDs. A removed and an added
+ * occurrence with the same kind, file, name and endpoints are one edited call:
+ * report them as a single change. Pairing follows source order.
+ */
+function pairOccurrences(observations: Observation[]): Observation[] {
+  const key = (f: Fact) =>
+    JSON.stringify([f.kind, f.file, f.name, f.from, f.to, f.typeOnly]);
+  const order = (a: Fact, b: Fact) =>
+    a.provenance.line - b.provenance.line || compare(a.id, b.id);
+  const removed = new Map<string, Fact[]>();
+  for (const o of observations)
+    if (o.change === 'removed')
+      removed.set(key(o.before!), [
+        ...(removed.get(key(o.before!)) ?? []),
+        o.before!,
+      ]);
+  const added = new Map<string, Fact[]>();
+  for (const o of observations)
+    if (o.change === 'added' && removed.has(key(o.after!)))
+      added.set(key(o.after!), [...(added.get(key(o.after!)) ?? []), o.after!]);
+  const paired = new Map<string, Fact>();
+  for (const [k, after] of added) {
+    const before = removed.get(k)!.sort(order);
+    after.sort(order);
+    for (let i = 0; i < Math.min(before.length, after.length); i++)
+      paired.set(after[i]!.id, before[i]!);
+  }
+  const consumed = new Set([...paired.values()].map((f) => f.id));
+  return observations.flatMap<Observation>((o) => {
+    if (o.change === 'removed' && consumed.has(o.id)) return [];
+    const before = o.change === 'added' ? paired.get(o.id) : undefined;
+    return before ? [{ ...o, change: 'changed', before }] : [o];
+  });
 }
 function matches(f: Fact, s: Selector): boolean {
   return Object.entries(s).every(
@@ -329,20 +473,40 @@ function covered(model: ProjectModel, s: Selector): boolean {
 export type ClauseResult = {
   id: string;
   clause:
-    'requires' | 'forbids' | 'preserves' | 'evidence' | 'scope' | 'intent';
+    | 'requires'
+    | 'forbids'
+    | 'preserves'
+    | 'evidence'
+    | 'scope'
+    | 'intent'
+    | 'budget'
+    | 'dependencies'
+    | 'claim';
   status: 'PASS' | 'INCOMPLETE' | 'DRIFT' | 'UNKNOWN';
   message: string;
+  /** Stable code of the reported gap; absent on PASS. */
+  finding?: string;
+  /** Paths, dependency names or per-evidence outcomes behind the status. */
+  details?: string[];
   facts: Fact[];
   evidence?: {
     artifactDigest: string;
     trust: string;
     file: string;
     scenario: string;
+    title?: string;
     status: string;
   };
 };
+export type Finding = {
+  /** `<result id>:<finding code>`, stable across runs. */
+  id: string;
+  status: Exclude<ClauseResult['status'], 'PASS'>;
+  message: string;
+  details?: string[];
+};
 export type Verification = {
-  schema: '0.2';
+  schema: '0.2' | '0.3';
   version: string;
   contractDigest: string;
   candidateContractDigest: string;
@@ -351,12 +515,19 @@ export type Verification = {
   status: string;
   exitCode: number;
   results: ClauseResult[];
+  findings: Finding[];
+};
+export type VerifyOptions = {
+  evidence?: EvidenceEnvelope;
+  approvedContract?: Contract;
+  /** File texts for line budgets and dependency manifests (Snapshot.texts). */
+  texts?: { base?: Record<string, string>; head?: Record<string, string> };
 };
 export function verify(
   input: Contract,
   base: ProjectModel,
   head: ProjectModel,
-  options: { evidence?: EvidenceEnvelope; approvedContract?: Contract } = {},
+  options: VerifyOptions = {},
 ): Verification {
   const candidate = contractSchema.parse(input);
   const contract = options.approvedContract
@@ -368,7 +539,7 @@ export function verify(
   if (base.provider !== head.provider || base.version !== head.version)
     throw new Error('Incompatible provider models');
   const results: ClauseResult[] = [];
-  if (options.approvedContract || candidate.schema === '0.2') {
+  if (options.approvedContract || candidate.schema !== '0.1') {
     const changed = contractDigest(candidate) !== contractDigest(contract);
     results.push({
       id: '$intent',
@@ -380,14 +551,17 @@ export function verify(
           : 'PASS',
       facts: [],
       message: !options.approvedContract
-        ? 'Provide a separately selected approved contract to evaluate schema 0.2.'
+        ? `Provide a separately selected approved contract to evaluate schema ${candidate.schema}.`
         : changed
           ? 'Candidate intent changed; evaluating obligations from the selected approved contract.'
           : 'Candidate matches the explicitly selected contract. Selection is local, not authenticated approval.',
     });
   }
-  if (contract.scope) {
-    const outside = fileChanges(base.inventory, head.inventory).filter(
+  const files = fileChanges(base.inventory, head.inventory);
+  if (contract.schema === '0.3')
+    results.push(...scopeResults(contract, files, options.texts));
+  else if (contract.scope) {
+    const outside = files.filter(
       (f) =>
         !contract.scope!.allowed.some((pattern) =>
           pathMatches(f.path, pattern),
@@ -401,16 +575,23 @@ export function verify(
       message: outside.length
         ? `Changes outside allowed scope: ${outside.map((f) => f.path).join(', ')}`
         : 'Every inventoried changed path is within the allowed scope.',
+      ...(outside.length ? { details: outside.map((f) => f.path) } : {}),
     });
   }
 
   for (const type of ['requires', 'forbids', 'preserves'] as const) {
-    for (const c of contract[type]) {
-      const facts = head.facts.filter((f) => matches(f, c.match));
-      const old = base.facts.filter((f) => matches(f, c.match));
+    for (const c of contract[type] as (typeof contract)['preserves']) {
+      if (c.match.kind === 'file') {
+        results.push(filePreserveResult(c.id, c.match, base, head, files));
+        continue;
+      }
+      const selector = c.match;
+      const facts = head.facts.filter((f) => matches(f, selector));
+      const old = base.facts.filter((f) => matches(f, selector));
       const invalidContext = head.diagnostics.some(
         (d) =>
-          d.global && (d.capability === 'all' || d.capability === c.match.kind),
+          d.global &&
+          (d.capability === 'all' || d.capability === selector.kind),
       );
       let status: ClauseResult['status'];
       let message: string;
@@ -419,7 +600,7 @@ export function verify(
           ? 'UNKNOWN'
           : facts.length
             ? 'PASS'
-            : covered(head, c.match)
+            : covered(head, selector)
               ? 'INCOMPLETE'
               : 'UNKNOWN';
         message = invalidContext
@@ -434,7 +615,7 @@ export function verify(
           ? 'UNKNOWN'
           : facts.length
             ? 'DRIFT'
-            : covered(head, c.match)
+            : covered(head, selector)
               ? 'PASS'
               : 'UNKNOWN';
         message = invalidContext
@@ -453,7 +634,7 @@ export function verify(
         );
         status = !old.length
           ? 'UNKNOWN'
-          : !covered(base, c.match) || !covered(head, c.match)
+          : !covered(base, selector) || !covered(head, selector)
             ? 'UNKNOWN'
             : altered.length
               ? 'DRIFT'
@@ -552,11 +733,61 @@ export function verify(
           : 'Required test definition not found or not analyzable.',
     });
   }
+  if (contract.schema === '0.3') {
+    const bound =
+      !!evidence &&
+      evidence.subject === head.contentDigest &&
+      evidence.contractDigest === contractDigest(contract) &&
+      (!head.subject.startsWith('git:') ||
+        evidence.revision === head.subject.split(':')[1]);
+    const testOutcome = (e: { file?: string; name: string }): TestOutcome => {
+      const label = `test ${e.file ? `${e.file} › ` : ''}${e.name}`;
+      if (bound) {
+        // Vitest full names prefix the test name with its suites, so the
+        // name matches the full name or the imported title exactly.
+        const runs = evidence!.tests.filter(
+          (t) =>
+            (!e.file || t.file === e.file) &&
+            (t.scenario === e.name || t.title === e.name),
+        );
+        const run = runs[0];
+        if (runs.length > 1 || run?.status === 'inconclusive')
+          return { status: 'UNKNOWN', detail: `${label}: ambiguous run` };
+        if (run?.status === 'passed' && evidence!.success)
+          return { status: 'PASS', detail: `${label}: executed, passed` };
+        if (run)
+          return {
+            status: 'INCOMPLETE',
+            detail: `${label}: executed, ${run.status}`,
+          };
+      }
+      const selector: Selector = {
+        kind: 'test-definition',
+        name: e.name,
+        ...(e.file ? { file: e.file } : {}),
+      };
+      const facts = head.facts.filter((f) => matches(f, selector));
+      if (facts.length)
+        return {
+          status: 'PASS',
+          detail: `${label}: defined, not executed`,
+          facts,
+        };
+      return covered(head, selector)
+        ? { status: 'INCOMPLETE', detail: `${label}: not found` }
+        : { status: 'UNKNOWN', detail: `${label}: not analyzable` };
+    };
+    results.push(
+      ...contract.claims.map((c) => claimResult(c, files, testOutcome)),
+    );
+  }
+  for (const r of results)
+    if (r.status !== 'PASS' && !r.finding) r.finding = findingCode(r);
   const statuses = ['INCOMPLETE', 'DRIFT', 'UNKNOWN'].filter((s) =>
     results.some((r) => r.status === s),
   );
   return {
-    schema: '0.2',
+    schema: contract.schema === '0.3' ? '0.3' : '0.2',
     version: VERSION,
     contractDigest: contractDigest(contract),
     candidateContractDigest: contractDigest(candidate),
@@ -565,7 +796,40 @@ export function verify(
     status: statuses.join(' + ') || 'PASS',
     exitCode: statuses.includes('UNKNOWN') ? 2 : statuses.length ? 1 : 0,
     results,
+    findings: results.flatMap((r) =>
+      r.status === 'PASS'
+        ? []
+        : [
+            {
+              id: `${r.id}:${r.finding}`,
+              status: r.status,
+              message: r.message,
+              ...(r.details ? { details: r.details } : {}),
+            },
+          ],
+    ),
   };
+}
+/** Default finding codes for results whose check did not set a specific one. */
+function findingCode(r: ClauseResult): string {
+  if (r.status === 'UNKNOWN')
+    return r.clause === 'intent' ? 'intent-not-approved' : 'undecided';
+  switch (r.clause) {
+    case 'intent':
+      return 'intent-changed';
+    case 'scope':
+      return 'out-of-scope';
+    case 'requires':
+      return 'required-fact-missing';
+    case 'forbids':
+      return 'forbidden-fact-present';
+    case 'preserves':
+      return 'preserve-violated';
+    case 'evidence':
+      return 'evidence-missing';
+    default:
+      return r.status.toLowerCase();
+  }
 }
 
 export function contractDigest(contract: Contract): string {

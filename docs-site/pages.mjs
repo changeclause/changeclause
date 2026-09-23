@@ -13,7 +13,7 @@ export const pages = [
     title: 'Quick start',
     group: 'Start here',
     description:
-      'Run the ChangeClause MVP locally and verify your first TypeScript change.',
+      'Scope guard for AI-written changes. Your agent says it is done. ChangeClause checks the claim.',
   },
   {
     slug: 'first-pr',
@@ -21,7 +21,7 @@ export const pages = [
     title: 'Plan and verify a change',
     group: 'Start here',
     description:
-      'Plan scoped work, preserve agreed intent, and verify a change with fresh evidence.',
+      'Agree a spec before coding, build against it, and check the finished change with fresh evidence.',
   },
   {
     slug: 'agents',
@@ -29,7 +29,7 @@ export const pages = [
     title: 'Coding agent integration',
     group: 'Start here',
     description:
-      'Plan changes, guide implementation with agreed specs, and verify supported obligations.',
+      'Have the agent draft the spec before coding, work against it, and check the result.',
   },
   {
     slug: 'examples',

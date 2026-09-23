@@ -1,8 +1,10 @@
-# Run your first verification
+# Quick start
 
-ChangeClause checks a code change against a written contract: what must exist, what must stay the same, and what must remain out of scope. Start with the included TypeScript example, then try a bounded change in your own repository.
+**Scope guard for AI-written changes.** Your agent says it is done. ChangeClause checks the claim.
 
-This is **v0.1.3, an early evaluation release**. Review and verification run locally, with no account, LLM, or hosted repository access. Packages are not yet published to npm. [Check the current licensing status](../NOTICE) before adoption or redistribution.
+You agree a short spec before coding: the outcome, the acceptance criteria, the allowed areas, the non-goals, and what must stay unchanged. The agent builds. ChangeClause then compares the finished change with the contract, the machine-checkable form of the spec. Every changed file outside the agreed scope, every required item without evidence, and every crossed boundary is a finding. Anything it cannot decide is UNKNOWN, never a silent pass.
+
+This is **v0.2.0, an early release**: a CLI that you build from source. Checks run locally and deterministically, with no LLM, no account, and no hosted service. Scope checks cover every changed file; code checks cover TypeScript and JavaScript. A Homebrew formula, a curl installer, npm packages, and a GitHub Action are coming soon; none of them work yet. Get release news at [changeclause.com](https://changeclause.com).
 
 ## Install from source
 
@@ -16,7 +18,7 @@ pnpm build
 pnpm demo
 ```
 
-The introductory demo checks static observations and test definitions. It should report:
+The demo runs one newsletter spec against three implementations. The incomplete one has no storage-failure test. The drift one passes all three of its tests, but signup imports the authentication module. The demo should report:
 
 ```text
 good       → PASS
@@ -50,9 +52,8 @@ This reads the merge-base-to-head change without checking out or running the tar
 
 ## Take the next step
 
-- [Use with a coding agent](agent-integration.md): install the skill and draft reviewable specs, contracts and PR reports.
-
-- [Plan and verify a change](workflows.md): agree intent before coding, guide implementation, then gather evidence and verify.
+- [Use with a coding agent](agent-integration.md): install the skill so the agent drafts the spec before it writes code.
+- [Plan and verify a change](workflows.md): agree the spec before coding, build against it, then gather evidence and check.
 - [Actual CI examples](ci-examples.md): both PRs pass their tests; one violates the declared boundary.
-- [Contract reference](architecture/change-contract.md): schema 0.2 clauses and evaluation rules.
+- [Contract reference](architecture/change-contract.md): the schema 0.2 contract format and evaluation rules.
 - [Supported scope](limitations.md): know which questions still need manual review.

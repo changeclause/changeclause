@@ -33,7 +33,14 @@ function args(command: string, state = 'good') {
     `${fixture}/fixtures/before`,
     '--head-dir',
     `${fixture}/fixtures/${state}`,
-    ...(command === 'verify' ? ['--contract', `${fixture}/contract.yaml`] : []),
+    ...(command === 'verify'
+      ? [
+          '--contract',
+          `${fixture}/contract.yaml`,
+          '--approved-contract',
+          `${fixture}/contract.yaml`,
+        ]
+      : []),
     '--json',
   ];
 }
@@ -82,7 +89,8 @@ test('a passing report does not assert behavioral completeness or test adequacy'
 test('unsupported execution claims remain unresolved in the assessment', () => {
   const input = args('verify');
   input[input.indexOf('--contract') + 1] = `${fixture}/contract.mvp.yaml`;
-  input.push('--approved-contract', `${fixture}/contract.mvp.yaml`);
+  input[input.indexOf('--approved-contract') + 1] =
+    `${fixture}/contract.mvp.yaml`;
   const result = run(input);
   const report = JSON.parse(result.stdout);
   expect(result.status).toBe(2);
@@ -94,6 +102,75 @@ test('unsupported execution claims remain unresolved in the assessment', () => {
       (r: { id: string }) => r.id === 'stores-email',
     ).basis,
   ).toBe('test-execution');
+});
+test('review text is a summary by default and lists every fact with --verbose', () => {
+  const base = args('review').filter((a) => a !== '--json');
+  const quiet = run(base),
+    verbose = run([...base, '--verbose']);
+  expect(quiet.status).toBe(0);
+  expect(quiet.stdout).toContain('Changed files:');
+  expect(quiet.stdout).toMatch(/^Facts: \d+ added/m);
+  expect(quiet.stdout).not.toMatch(/^added +symbol/m);
+  expect(quiet.stdout).toContain('--verbose');
+  expect(verbose.stdout).toMatch(/^added +symbol/m);
+  expect(
+    verbose.stdout
+      .split('\n')
+      .filter((l) => /^(added|removed|changed) /.test(l)).length,
+  ).toBe(JSON.parse(run(args('review')).stdout).observations.length);
+});
+test('schema 0.3 verify reads manifests, migrations and budgets from the snapshots', () => {
+  const before = temp(),
+    after = temp(),
+    config = temp();
+  for (const dir of [before, after]) mkdirSync(path.join(dir, 'migrations'));
+  writeFileSync(path.join(before, 'package.json'), '{"dependencies":{}}');
+  writeFileSync(path.join(before, 'migrations', '0001.sql'), 'create a;\n');
+  writeFileSync(
+    path.join(after, 'package.json'),
+    '{"dependencies":{"rrule":"^2"}}',
+  );
+  writeFileSync(path.join(after, 'migrations', '0001.sql'), 'create b;\n');
+  writeFileSync(path.join(after, 'notes.md'), 'one\ntwo\n');
+  const contract = path.join(config, 'contract.yaml');
+  writeFileSync(
+    contract,
+    [
+      "schema: '0.3'",
+      'change: { name: fixture }',
+      "scope: { allow: ['package.json', 'migrations/**'], budget: { lines: 3 } }",
+      'preserves:',
+      "  - { id: migrations-immutable, match: { kind: file, path: 'migrations/**' } }",
+      'claims:',
+      "  - { id: calendar, text: Recurring events, files: ['src/**'] }",
+    ].join('\n'),
+  );
+  const common = [
+    'verify',
+    '--base-dir',
+    before,
+    '--head-dir',
+    after,
+    '--contract',
+    contract,
+    '--approved-contract',
+    contract,
+  ];
+  const result = run([...common, '--json']);
+  expect(result.status).toBe(1);
+  const report = JSON.parse(result.stdout);
+  expect(report.schema).toBe('0.3');
+  expect(report.findings.map((f: { id: string }) => f.id)).toEqual([
+    '$scope:out-of-scope',
+    '$budget:over-budget',
+    '$dependencies:unapproved-dependency',
+    'migrations-immutable:preserve-violated',
+    'calendar:claim-not-implemented',
+  ]);
+  const text = run(common).stdout;
+  expect(text).toContain('DRIFT      $dependencies:unapproved-dependency');
+  expect(text).toContain('rrule (package.json)');
+  expect(text).toContain('lines 6 > 3');
 });
 test('bad input is a machine-readable error', () => {
   const result = run(['review', '--base-dir', '/does-not-exist', '--json']);

@@ -4,17 +4,47 @@
 
 [Website](https://changeclause.com) · [Developer docs](https://changeclause.dev) · [Quick start](#quick-start) · [Examples](examples/newsletter/README.md) · [Live PR examples](https://github.com/changeclause/examples) · [Contributing](CONTRIBUTING.md) · [Security](SECURITY.md)
 
-A code diff shows what changed. A change contract records what was supposed to change.
+**Scope guard for AI-written changes.** Your agent says it is done. ChangeClause checks the claim.
 
-ChangeClause helps developers plan changes around explicit requirements and review TypeScript and JavaScript implementations against supported checks. Run it locally to find missing obligations, unexpected dependencies, changes outside the agreed scope, and missing test evidence.
+**Version 0.2.0 · Early release.** Local and deterministic. No LLM, no account, no hosted service.
 
-**Version 0.1.3 · Early evaluation release.** Review and verification require no account, LLM, or hosted service.
+## The problem
+
+You ask a coding agent for a change. It returns a large PR. The tests pass. You still cannot tell:
+
+- which changes were necessary for the request,
+- which acceptance criteria actually have evidence behind them,
+- what else it touched: a new dependency, a crossed module boundary, an edited migration, a rewritten plan.
+
+AI review bots read the diff and give an opinion. They do not hold the change to what was agreed.
+
+## How it works: agree → build → check
+
+1. **Agree the scope.** Before coding, the agent drafts a short spec: outcome, acceptance criteria, allowed areas, non-goals, and what must stay unchanged. A person approves it. The person approves; the person does not author.
+2. **Build.** The agent works as usual. The spec stays the reference.
+3. **Check.** ChangeClause compares the finished change with the contract, the machine-checkable form of the spec:
+   - every changed file is inside the agreed scope, or it is a finding,
+   - every required item in the contract has evidence (a code fact, a test definition, or a test result), or it is a finding,
+   - forbidden dependencies and preserved APIs hold,
+   - anything it cannot decide is UNKNOWN, never a silent pass.
+
+| Result     | Meaning                                                                     |
+| ---------- | --------------------------------------------------------------------------- |
+| PASS       | Every check in the contract is satisfied.                                   |
+| INCOMPLETE | A required item or test scenario has no evidence, or a required test fails. |
+| DRIFT      | The change left the agreed scope, crossed a boundary, or changed the spec.  |
+| UNKNOWN    | Evidence is missing, stale, or beyond what the checks support.              |
+| ERROR      | Input is invalid or a command failed.                                       |
+
+Results can combine. See [results and exit codes](docs/results.md).
 
 ## See what it catches
 
-A newsletter signup change should validate an email, store it, and handle storage failures. It should leave the health check unchanged and avoid adding an authentication dependency.
+- **"Fix the typo." It also refactored the auth module.** The changed files are outside the agreed scope: DRIFT.
+- **"All criteria met." One criterion has no test.** A claim without evidence: INCOMPLETE.
+- **"Tests pass." It added a dependency the spec did not allow.** DRIFT.
 
-The included example compares three implementations. Running `pnpm demo` produces:
+The included newsletter example makes this concrete. The spec asks for an email signup that stores subscriptions and keeps authentication out. Three implementations run through the same contract. `pnpm demo` prints:
 
 ```text
 good       → PASS (exit 0)
@@ -22,11 +52,11 @@ incomplete → INCOMPLETE (exit 1)
 drift      → DRIFT (exit 1)
 ```
 
-The incomplete implementation is missing a required test scenario. The drift implementation adds a forbidden dependency even though its behavior tests pass. A small [change contract](examples/newsletter/contract.yaml) makes those expectations explicit. This introductory demo checks test definitions; `pnpm qualify` demonstrates verification using actual test execution records.
+The incomplete implementation has no storage-failure test. The drift implementation passes all three of its tests, but signup imports the authentication module. Read the [contract](examples/newsletter/contract.yaml) and the [spec](examples/newsletter/spec.md).
 
 ## Quick start
 
-Prerequisites: Git, Node.js 24, and pnpm 10.29.3. If you use nvm, run `nvm install` and `nvm use` after cloning to select the version in `.nvmrc`.
+Today ChangeClause is an early CLI that you build from source. Prerequisites: Git, Node.js 24, and pnpm 10.29.3. If you use nvm, run `nvm install` and `nvm use` after cloning to select the version in `.nvmrc`.
 
 ```sh
 git clone https://github.com/changeclause/changeclause.git
@@ -36,15 +66,11 @@ pnpm build
 pnpm demo
 ```
 
-Packages are not yet published to npm; use this source checkout. Use is subject to [PolyForm Perimeter 1.0.1](LICENSE); see the [license summary](#license).
-
-To run the execution-based examples and explicit known-limit probes:
+To run the examples with real test results, including an aliased dependency and two broken implementations:
 
 ```sh
 pnpm qualify
 ```
-
-The examples cover a valid change, a missing scenario, direct and aliased dependency violations, a storage implementation that does nothing, and removed email validation. Both broken implementations must fail their behavior tests and verification.
 
 To inspect a PR in another local repository:
 
@@ -52,47 +78,25 @@ To inspect a PR in another local repository:
 pnpm --silent changeclause review --repo /path/to/repo --base main --head HEAD --comparison pr --json
 ```
 
-This compares the merge base with the head commit. It reads committed files without checking out or executing the target code. Follow the [PR verification guide](docs/workflows.md) to select an approved contract and import test evidence.
+This reads committed files from the merge base to the head commit. It does not check out or run the target code. Follow [plan and verify a change](docs/workflows.md) to check a PR against an approved contract with test evidence.
+
+**Coming soon:** a single binary through Homebrew, a curl installer, and npm, plus a GitHub Action. None of these install paths work yet. Get release news at [changeclause.com](https://changeclause.com).
 
 ## Use with a coding agent
 
-The bundled [ChangeClause skill](docs/agent-integration.md) guides Codex and Claude Code from planning and agreed specs through scoped implementation, contract authoring and verification. Start before code or a PR exists; use the spec to keep work tied to the requested outcome and leave unrelated changes out. It includes shared templates and a worked example. Start with an advisory integration and keep unsupported criteria visible.
+The bundled [ChangeClause skill](docs/agent-integration.md) guides Codex and Claude Code through the same flow. The agent drafts the spec before code exists, works against it, and writes the contract when the files and checks are known. Start in advisory mode.
 
-## What you can check
+## Scope
 
-- **Requirements:** declarations, imports, calls, and test definitions that must exist.
-- **Boundaries:** forbidden dependencies, including supported aliases and transitive local imports.
-- **Preservation:** baseline declarations or explicitly typed public signatures that must remain unchanged.
-- **Scope and intent:** changed files against allowed paths, and a candidate contract against separately approved intent.
-- **Executed tests:** imported Vitest results tied to the source snapshot and approved contract.
-
-| Result     | Meaning                                                                         |
-| ---------- | ------------------------------------------------------------------------------- |
-| PASS       | The declared, supported obligations are satisfied.                              |
-| INCOMPLETE | A required fact or scenario is missing, or required execution was unsuccessful. |
-| DRIFT      | A dependency, preserved fact, scope, or intent constraint was violated.         |
-| UNKNOWN    | Evidence is missing, stale, or beyond the supported analysis.                   |
-| ERROR      | Input is invalid or a command failed.                                           |
-
-Results can combine. See the [contract reference](docs/architecture/change-contract.md) for evaluation rules and exit codes.
-
-## Scope and limitations
-
-The provider analyzes one isolated TypeScript/JavaScript project. Nested projects, framework templates such as Astro/Vue, dynamic dispatch, and full API compatibility are not supported. Other files still participate in the change inventory and scope checks, but require manual semantic review.
-
-Imported Vitest results are **self-attested**: source binding detects stale evidence but cannot establish the honesty of a test runner or the quality of assertions. Review and verification never run tests; executing tests and importing their results are separate steps.
-
-A PASS covers the declared supported obligations. Continue using your compiler, tests, security checks, and ordinary code review. See [evidence and trust](docs/architecture/evidence-and-trust.md) for the full boundaries.
+Scope checks cover every changed file. Code checks cover one TypeScript or JavaScript project. ChangeClause checks only what the contract states; it does not replace your tests, compiler, or code review. See [supported scope](docs/limitations.md) for the exact limits.
 
 ## Documentation
 
-Read the [developer documentation](https://changeclause.dev), including [actual CI examples](https://changeclause.dev/examples/) with preserved reports and exact tested revisions. The site is generated from this repository's public Markdown; see [docs-site](docs-site/README.md) for local preview and publication.
+Read the [developer documentation](https://changeclause.dev), including [actual CI examples](https://changeclause.dev/examples/) with preserved reports and exact tested revisions. The site is generated from this repository's public Markdown; see [docs-site](docs-site/README.md).
 
-- [Verify a PR](docs/workflows.md)
+- [Plan and verify a change](docs/workflows.md)
 - [Newsletter examples](examples/newsletter/README.md)
-- [Change contract reference](docs/architecture/change-contract.md)
-- [Supported TypeScript observations](docs/architecture/provider-model.md)
-- [Snapshots and Git comparisons](docs/architecture/project-model.md)
+- [Contract reference](docs/architecture/change-contract.md)
 - [Evidence and trust](docs/architecture/evidence-and-trust.md)
 - [Architecture](docs/architecture.md)
 
@@ -102,8 +106,4 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development commands and PR conventio
 
 ## License
 
-ChangeClause is **source-available under the [PolyForm Perimeter License 1.0.1](LICENSE)**.
-
-You may use it internally, including in a business, and modify and redistribute it for purposes permitted by the license. You may not use it to provide others with a competing product, including a competing hosted service or a free competing product. The full license controls; this summary does not change its terms.
-
-This is not an OSI-approved open-source license. Preserve the license and [required notices](NOTICE) when redistributing. Third-party dependencies retain their own licenses. For permissions beyond these terms, contact the maintainers through [changeclause.com](https://changeclause.com).
+ChangeClause is open source under the [Apache License, Version 2.0](LICENSE). See [NOTICE](NOTICE). Contributions are accepted under the same license. Releases before v0.2.0 remain under the license included with each of those releases.

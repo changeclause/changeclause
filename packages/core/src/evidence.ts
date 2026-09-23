@@ -21,6 +21,8 @@ const testRecord = z
   .object({
     file: z.string().min(1),
     scenario: z.string().min(1),
+    /** The test's own name; `scenario` also carries its suite names. */
+    title: z.string().min(1).optional(),
     status: z.enum(['passed', 'failed', 'skipped', 'inconclusive']),
   })
   .strict();
@@ -94,6 +96,7 @@ const reportSchema = z
             z
               .object({
                 fullName: z.string().min(1),
+                title: z.string().optional(),
                 status: z.enum([
                   'passed',
                   'failed',
@@ -173,7 +176,12 @@ export function importVitestReport(
         : test.status === 'passed' || test.status === 'failed'
           ? test.status
           : 'skipped';
-      return { file, scenario: test.fullName, status };
+      return {
+        file,
+        scenario: test.fullName,
+        ...(test.title ? { title: test.title } : {}),
+        status,
+      };
     })
     .sort((a, b) =>
       compare(a.file + '\0' + a.scenario, b.file + '\0' + b.scenario),

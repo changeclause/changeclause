@@ -24,7 +24,7 @@ The [provider reference](architecture/provider-model.md) describes exact observa
 | Test quality                     | A passing test can have weak assertions. Test definitions alone do not prove execution.                                        |
 | Evidence authenticity            | Imported execution reports are self-attested. No signed CI attestation or authenticated ingestion.                             |
 | Approval                         | Selecting an approved contract is a caller decision, not authenticated prior approval.                                         |
-| Licensing                        | The public code uses PolyForm Perimeter 1.0.1; see [LICENSE](../LICENSE) and [NOTICE](../NOTICE).                              |
+| Licensing                        | The public code uses Apache-2.0; see [LICENSE](../LICENSE) and [NOTICE](../NOTICE).                                            |
 
 ## Evaluate in advisory mode
 

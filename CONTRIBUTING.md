@@ -1,8 +1,8 @@
 # Contributing to ChangeClause
 
-Before contributing, read [LICENSE](LICENSE) and [NOTICE](NOTICE). ChangeClause uses PolyForm Perimeter 1.0.1, a source-available license that restricts providing competing products, including free competing products.
+ChangeClause is licensed under the [Apache License, Version 2.0](LICENSE). See also [NOTICE](NOTICE).
 
-Submit only material you have the right to contribute. Unless separately agreed in writing, contributions submitted for inclusion are offered under the same PolyForm Perimeter 1.0.1 terms. No copyright assignment or additional proprietary relicensing rights are implied. Identify third-party code and its license in your PR.
+Submit only material you have the right to contribute. Under section 5 of the Apache License, unless you explicitly state otherwise, any contribution you intentionally submit for inclusion is licensed under the Apache License, Version 2.0, without additional terms or conditions (inbound = outbound). No copyright assignment is required. Identify third-party code and its license in your PR.
 
 ## Development
 

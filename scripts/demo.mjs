@@ -16,6 +16,8 @@ for (const [state, expected, code] of [
       `${root}/fixtures/${state}`,
       '--contract',
       `${root}/contract.yaml`,
+      '--approved-contract',
+      `${root}/contract.yaml`,
       '--json',
     ],
     { encoding: 'utf8' },

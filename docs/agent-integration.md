@@ -21,11 +21,11 @@ A planning-only request ends with the plan. Do not create a PR, install dependen
 
 ## Install the skill
 
-Copy the skill from a reviewed public **v0.1.3** checkout. Planning with the skill does not require building the CLI. When ready to execute checks, use Node 24 and pnpm 10.29.3 and follow the [quick start](quick-start.md). Packages are not published to npm. To obtain the pinned source:
+Copy the skill from a reviewed public **v0.2.0** checkout. Planning with the skill does not require building the CLI. When ready to execute checks, use Node 24 and pnpm 10.29.3 and follow the [quick start](quick-start.md). Packages are not published to npm. To obtain the pinned source:
 
 ```sh
-git clone --branch v0.1.3 --depth 1 https://github.com/changeclause/changeclause.git changeclause-v0.1.3
-cd changeclause-v0.1.3
+git clone --branch v0.2.0 --depth 1 https://github.com/changeclause/changeclause.git changeclause-v0.2.0
+cd changeclause-v0.2.0
 # Only when ready to build and run the verifier:
 # pnpm install --frozen-lockfile
 # pnpm build
@@ -41,7 +41,7 @@ Install the complete `skills/changeclause` directory, including references and a
 For example, run this from a shell after setting real absolute paths. Select one destination, or install the same release in both if your team uses both agents:
 
 ```sh
-CC_ROOT=/absolute/path/to/changeclause-v0.1.3
+CC_ROOT=/absolute/path/to/changeclause-v0.2.0
 PROJECT=/absolute/path/to/your-project
 SKILL_PARENT="$PROJECT/.agents/skills" # Claude Code: "$PROJECT/.claude/skills"
 if [ -e "$SKILL_PARENT/changeclause" ] || [ -L "$SKILL_PARENT/changeclause" ]; then

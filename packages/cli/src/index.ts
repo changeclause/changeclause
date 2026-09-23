@@ -11,9 +11,16 @@ import {
   parseContract,
   verify,
   type ProjectModel,
+  type Snapshot,
 } from '@changeclause/core';
 import { typescriptProvider } from '@changeclause/provider-typescript';
 import { directorySnapshot, gitSnapshot, comparisonRefs } from './input.js';
+import {
+  changedDiagnostics,
+  renderChangeSummary,
+  renderDiagnosticSummary,
+  renderObservation,
+} from './summary.js';
 type Options = {
   baseDir?: string;
   headDir?: string;
@@ -24,11 +31,12 @@ type Options = {
   evidence?: string;
   approvedContract?: string;
   json?: boolean;
+  verbose?: boolean;
   comparison: string;
 };
 async function models(
   o: Options,
-): Promise<[ProjectModel, ProjectModel, object]> {
+): Promise<[ProjectModel, ProjectModel, object, Snapshot[]]> {
   const dirs = !!(o.baseDir || o.headDir);
   if (!['exact', 'pr'].includes(o.comparison))
     throw new Error('Comparison must be exact or pr.');
@@ -61,6 +69,7 @@ async function models(
     typescriptProvider.analyze(snapshots[0]!),
     typescriptProvider.analyze(snapshots[1]!),
     comparison,
+    snapshots,
   ];
 }
 const program = new Command()
@@ -81,7 +90,8 @@ for (const name of ['review', 'verify']) {
     .option('--base <ref>', 'baseline Git commit/ref')
     .option('--head <ref>', 'candidate Git commit/ref (default HEAD)')
     .option('--comparison <mode>', 'exact commits or PR merge base', 'exact')
-    .option('--json', 'machine-readable deterministic report');
+    .option('--json', 'machine-readable deterministic report')
+    .option('--verbose', 'list every fact change in text output');
   if (name === 'verify')
     command
       .requiredOption('--contract <path>', 'YAML change contract')
@@ -96,7 +106,7 @@ for (const name of ['review', 'verify']) {
         name === 'verify'
           ? parseContract(await readFile(options.contract!, 'utf8'))
           : undefined;
-      const [base, head, comparison] = await models(options);
+      const [base, head, comparison, snapshots] = await models(options);
       const files = fileChanges(base.inventory, head.inventory);
       const observations = diff(base, head);
       const coverage = {
@@ -125,6 +135,7 @@ for (const name of ['review', 'verify']) {
         const result = verify(contract, base, head, {
           evidence,
           approvedContract,
+          texts: { base: snapshots[0]!.texts, head: snapshots[1]!.texts },
         });
         const assessed = assessment(
           approvedContract ?? contract,
@@ -174,6 +185,19 @@ for (const name of ['review', 'verify']) {
             );
           for (const item of assessed.manualReview)
             process.stdout.write(`MANUAL ${item}\n`);
+          for (const line of renderChangeSummary(files, observations))
+            process.stdout.write(`${line}\n`);
+          if (options.verbose)
+            for (const o of observations)
+              process.stdout.write(`${renderObservation(o)}\n`);
+          process.stdout.write(
+            `Findings:${result.findings.length ? '' : ' none'}\n`,
+          );
+          for (const f of result.findings) {
+            process.stdout.write(`  ${f.status.padEnd(10)} ${f.id}\n`);
+            for (const d of f.details ?? [])
+              process.stdout.write(`             ${d}\n`);
+          }
           process.stdout.write(
             `${files.length} changed files; ${coverage.unmodeledChangedFiles.length} without semantic analysis; ${head.diagnostics.length} analysis limitations.\n`,
           );
@@ -206,33 +230,39 @@ for (const name of ['review', 'verify']) {
           );
         else {
           process.stdout.write(
-            `ChangeClause ${VERSION} — ${observations.length} observations\n`,
+            `ChangeClause ${VERSION} review — ${files.length} changed files, ${observations.length} fact changes\n`,
           );
-          for (const o of observations) {
-            const f = o.after ?? o.before!;
-            process.stdout.write(
-              `${o.change.padEnd(7)} ${o.kind.padEnd(16)} ${f.file} ${f.name} (${f.provenance.file}:${f.provenance.line})${f.from ? ` [${f.from} → ${f.to}]` : ''}\n`,
-            );
-          }
+          for (const line of renderChangeSummary(files, observations))
+            process.stdout.write(`${line}\n`);
+          if (options.verbose)
+            for (const o of observations)
+              process.stdout.write(`${renderObservation(o)}\n`);
           if (!observations.length)
             process.stdout.write('No supported structural changes observed.\n');
         }
-        if (!options.json)
-          for (const f of files)
-            process.stdout.write(
-              `${f.change.padEnd(7)} file ${f.path} (${(f.after ?? f.before!).category})\n`,
-            );
         process.exitCode = exitCode;
       }
-      if (!options.json)
-        for (const [label, model] of [
-          ['base', base],
-          ['head', head],
-        ] as const)
-          for (const d of model.diagnostics)
+      if (!options.json) {
+        const shown = changedDiagnostics(files, base, head);
+        if (options.verbose)
+          for (const { side, diagnostic: d } of shown)
             process.stdout.write(
-              `UNKNOWN ${label} ${d.file} (${d.capability}): ${d.message}\n`,
+              `UNKNOWN ${side} ${d.file} (${d.capability}): ${d.message}\n`,
             );
+        else
+          for (const line of renderDiagnosticSummary(shown))
+            process.stdout.write(`${line}\n`);
+        const hidden =
+          base.diagnostics.length + head.diagnostics.length - shown.length;
+        if (hidden)
+          process.stdout.write(
+            `${hidden} analysis limitations in unchanged files are omitted; see --json.\n`,
+          );
+        if (!options.verbose && observations.length)
+          process.stdout.write(
+            `Run with --verbose to list all ${observations.length} fact changes.\n`,
+          );
+      }
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);
       if (options.json)

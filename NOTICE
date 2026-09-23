@@ -1,12 +1,11 @@
 ChangeClause
-Required Notice: Copyright (c) 2026 the ChangeClause authors.
-Required Notice: https://changeclause.com
+Copyright 2026 the ChangeClause authors.
 
-This distribution is licensed under the PolyForm Perimeter License 1.0.1.
-See LICENSE for the complete terms. This is source-available software, not
-OSI-approved open-source software. Use, modification, and redistribution
-are subject to the license, including its restriction on providing a
-competing product, even if that product is offered free of charge.
+This product includes software developed by the ChangeClause authors
+(https://changeclause.com).
+
+Licensed under the Apache License, Version 2.0. See LICENSE for the
+complete terms.
 
 Third-party dependencies and separately identified third-party materials
 retain their own licenses. No ownership of those materials is claimed.

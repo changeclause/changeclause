@@ -81,6 +81,33 @@ export const typescriptProvider: AnalysisProvider = {
         ];
       };
       const canonical = (node: ts.Node) => JSON.stringify(structural(node));
+      // A call's own text: nested calls keep only their callee and nested
+      // functions become a placeholder. Those have their own facts, so an
+      // edit deep inside an argument does not also change every enclosing call.
+      const shallow = (root: ts.Node): string => {
+        const walk = (node: ts.Node): unknown => {
+          if (node !== root && ts.isCallExpression(node))
+            return [node.kind, normalize(node.expression)];
+          if (
+            node !== root &&
+            (ts.isArrowFunction(node) || ts.isFunctionExpression(node))
+          )
+            return [node.kind];
+          const children = node
+            .getChildren(source)
+            .filter((child) => child.kind !== ts.SyntaxKind.SemicolonToken);
+          return [
+            node.kind,
+            children.length
+              ? children.map(walk)
+              : node.kind === ts.SyntaxKind.JsxText
+                ? source.text.slice(node.pos, node.end)
+                : node.getText(source),
+          ];
+        };
+        return JSON.stringify(walk(root));
+      };
+      const occurrences = new Map<string, number>();
       const add = (
         kind: Kind,
         name: string,
@@ -90,7 +117,17 @@ export const typescriptProvider: AnalysisProvider = {
         to?: string,
         typeOnly?: boolean,
       ) => {
-        const id = `${kind}:${hash(JSON.stringify([file, name, from, to, typeOnly]))}`;
+        // Calls are individual occurrences keyed by their own text and an
+        // ordinal among identical calls in the same owner, never by line.
+        // Moving a call leaves its identity unchanged.
+        let key: unknown[] = [file, name, from, to, typeOnly];
+        if (kind === 'call-site' || kind === 'resolved-call') {
+          key = [...key, hash(value)];
+          const ordinal = occurrences.get(JSON.stringify(key)) ?? 0;
+          occurrences.set(JSON.stringify(key), ordinal + 1);
+          key.push(ordinal);
+        }
+        const id = `${kind}:${hash(JSON.stringify(key))}`;
         const existing = groups.get(id);
         if (existing) {
           existing.values.push(value);
@@ -343,7 +380,7 @@ export const typescriptProvider: AnalysisProvider = {
                 'resolved-call',
                 target,
                 node,
-                canonical(node),
+                shallow(node),
                 nextOwner,
                 target,
               );
@@ -385,7 +422,7 @@ export const typescriptProvider: AnalysisProvider = {
             'call-site',
             normalize(expression),
             node,
-            canonical(node),
+            shallow(node),
             nextOwner,
             normalize(expression),
           );
