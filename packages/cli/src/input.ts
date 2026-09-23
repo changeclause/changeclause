@@ -28,6 +28,7 @@ function classify(file: string, mode: string): FileEntry['category'] {
 }
 function collect() {
   const files: Record<string, string> = Object.create(null),
+    texts: Record<string, string> = Object.create(null),
     inventory: FileEntry[] = [];
   let total = 0;
   const check = (size: number) => {
@@ -58,9 +59,16 @@ function collect() {
       } catch {
         throw new Error(`Expected UTF-8 text: ${file}`);
       }
+      texts[file] = files[file]!;
+    } else if (category !== 'opaque' && !bytes.includes(0)) {
+      try {
+        texts[file] = new TextDecoder('utf-8', { fatal: true }).decode(bytes);
+      } catch {
+        // Binary content stays inventoried, without text.
+      }
     }
   };
-  return { files, inventory, check, add };
+  return { files, texts, inventory, check, add };
 }
 export async function directorySnapshot(root: string): Promise<Snapshot> {
   const result = collect();
@@ -93,10 +101,11 @@ export async function directorySnapshot(root: string): Promise<Snapshot> {
   return {
     subject: inventoryDigest(result.inventory),
     files: result.files,
+    texts: result.texts,
     inventory: result.inventory,
   };
 }
-export function git(repo: string, args: string[]): Buffer {
+export function git(repo: string, args: string[], input?: string): Buffer {
   const env = { ...process.env };
   for (const key of [
     'GIT_DIR',
@@ -110,9 +119,11 @@ export function git(repo: string, args: string[]): Buffer {
     'git',
     ['--no-pager', '-c', 'core.fsmonitor=false', '-C', repo, ...args],
     {
-      maxBuffer: MAX_TOTAL,
-      timeout: 30000,
-      stdio: ['ignore', 'pipe', 'pipe'],
+      // Headers of a batched blob read add a little over the content limit.
+      maxBuffer: MAX_TOTAL + 4 * 1024 * 1024,
+      timeout: input === undefined ? 30000 : 120000,
+      ...(input === undefined ? {} : { input }),
+      stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'],
       env: {
         ...env,
         GIT_NO_REPLACE_OBJECTS: '1',
@@ -155,6 +166,8 @@ export function gitSnapshot(repo: string, ref: string): Snapshot {
     .toString('utf8')
     .split('\0')
     .filter(Boolean);
+  const blobs: { file: string; mode: string; object: string }[] = [];
+  let declared = 0;
   for (const entry of entries) {
     const tab = entry.indexOf('\t'),
       file = entry.slice(tab + 1);
@@ -163,14 +176,39 @@ export function gitSnapshot(repo: string, ref: string): Snapshot {
       result.add(file, Buffer.from(object!), '160000');
       continue;
     }
-    result.check(Number(bytes));
-    result.add(file, git(repo, ['cat-file', 'blob', object!]), mode!);
+    // Enforce the limits on declared sizes before any content is read.
+    const size = Number(bytes);
+    declared += size;
+    if (!Number.isFinite(size) || size > MAX_FILE || declared > MAX_TOTAL)
+      result.check(Number.POSITIVE_INFINITY);
+    blobs.push({ file, mode: mode!, object: object! });
   }
+  const contents = readBlobs(repo, [...new Set(blobs.map((b) => b.object))]);
+  for (const blob of blobs)
+    result.add(blob.file, contents.get(blob.object)!, blob.mode);
   result.inventory.sort((a, b) => compare(a.path, b.path));
   return {
     subject: `git:${commit}:${inventoryDigest(result.inventory)}`,
     revision: commit,
     files: result.files,
+    texts: result.texts,
     inventory: result.inventory,
   };
+}
+/** Read many blobs through one `cat-file --batch` process instead of one process per blob. */
+function readBlobs(repo: string, objects: string[]): Map<string, Buffer> {
+  const contents = new Map<string, Buffer>();
+  if (!objects.length) return contents;
+  const output = git(repo, ['cat-file', '--batch'], objects.join('\n') + '\n');
+  let offset = 0;
+  for (const object of objects) {
+    const end = output.indexOf(0x0a, offset);
+    const header = output.subarray(offset, end).toString('utf8').split(' ');
+    if (end < 0 || header[0] !== object || header[1] !== 'blob')
+      throw new Error(`Cannot read Git object ${object}.`);
+    const size = Number(header[2]);
+    contents.set(object, output.subarray(end + 1, end + 1 + size));
+    offset = end + 1 + size + 1;
+  }
+  return contents;
 }

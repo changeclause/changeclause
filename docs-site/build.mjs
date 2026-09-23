@@ -129,13 +129,13 @@ for (const [index, page] of pages.entries()) {
 <link rel="icon" href="/assets/favicon-v2.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="/assets/icon-180-v2.png"><link rel="stylesheet" href="/assets/docs.css"><script src="/assets/docs.js" defer></script></head>
 <body><a class="skip" href="#main">Skip to content</a>
 <header class="masthead"><a class="wordmark" href="/"><img src="/assets/brand-symbol.svg" width="42" height="32" alt=""> ChangeClause <small>/ docs</small></a><nav aria-label="External navigation"><a href="https://changeclause.com">Website ↗</a><a href="${repository}">GitHub ↗</a></nav></header>
-<div class="docs-shell"><aside class="sidebar"><p class="release"><span class="release-dot" aria-hidden="true"></span>v${escape(version)} <span>Early evaluation</span></p>
+<div class="docs-shell"><aside class="sidebar"><p class="release"><span class="release-dot" aria-hidden="true"></span>v${escape(version)} <span>Early release</span></p>
 <div class="search"><label for="docs-search">Search documentation</label><input type="search" id="docs-search" placeholder="Search docs…" autocomplete="off" aria-controls="search-results"><p id="search-status" class="sr-only" role="status"></p><ul id="search-results" hidden></ul></div>
 <details class="docs-navigation" open><summary>Browse documentation <span aria-hidden="true">+</span></summary><nav aria-label="Documentation">${nav}</nav></details>
 <a class="sidebar-help" href="https://changeclause.com/share/">Bring a tricky change ↗</a></aside>
 <main id="main" tabindex="-1"><p class="overline">${escape(page.group)} / ${escape(page.title)}</p><article>${content}</article>
 <nav class="page-turn" aria-label="Adjacent documentation">${previous ? `<a href="${pageUrl(previous)}"><small>Previous</small>← ${escape(previous.title)}</a>` : '<span></span>'}${next ? `<a href="${pageUrl(next)}"><small>Next</small>${escape(next.title)} →</a>` : ''}</nav>
-<footer class="page-footer"><p>Local analysis. Explicit obligations. Bounded conclusions.</p><a href="${repository}/blob/${revision}/${page.file}">Page source ↗</a><span>Docs revision ${revision.slice(0, 7)}</span><a href="${repository}/issues/new">Report a docs issue ↗</a></footer></main>
+<footer class="page-footer"><p>Scope guard for AI-written changes. Local and deterministic.</p><a href="${repository}/blob/${revision}/${page.file}">Page source ↗</a><span>Docs revision ${revision.slice(0, 7)}</span><a href="${repository}/issues/new">Report a docs issue ↗</a></footer></main>
 <aside class="page-outline"><p class="overline">On this page</p><nav aria-label="Page sections">${headings.map((h) => `<a href="#${h.id}">${h.title}</a>`).join('')}</nav></aside></div></body></html>`;
   const destination = resolve(output, page.slug, 'index.html');
   await mkdir(dirname(destination), { recursive: true });

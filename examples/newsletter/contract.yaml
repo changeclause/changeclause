@@ -1,7 +1,9 @@
-schema: '0.1'
+schema: '0.2'
 change:
   name: Newsletter signup
   intent: Add signup and storage without coupling newsletter to authentication.
+scope:
+  allowed: [src/handler.ts, src/newsletter.ts, src/newsletter.test.ts]
 requires:
   - id: endpoint
     match: { kind: symbol, file: src/handler.ts, name: post }

@@ -13,5 +13,6 @@
   "devDependencies": {
     "marked": "18.0.13",
     "wrangler": "4.136.0"
-  }
+  },
+  "license": "Apache-2.0"
 }

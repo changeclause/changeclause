@@ -17,15 +17,15 @@ From the repository root:
 pnpm build
 pnpm demo
 pnpm changeclause review --base-dir examples/newsletter/fixtures/before --head-dir examples/newsletter/fixtures/drift
-pnpm --silent changeclause verify --base-dir examples/newsletter/fixtures/before --head-dir examples/newsletter/fixtures/incomplete --contract examples/newsletter/contract.yaml --json
+pnpm --silent changeclause verify --base-dir examples/newsletter/fixtures/before --head-dir examples/newsletter/fixtures/incomplete --contract examples/newsletter/contract.yaml --approved-contract examples/newsletter/contract.yaml --json
 ```
 
-The final command intentionally exits 1. `pnpm test` runs the fixture behavior tests separately. Verify never executes the fixture. The contract asks only for definitions and an exact syntactic `store.put` call: it does not prove that storage is reachable, correct, deployed, or actually written.
+The final command intentionally exits 1. `pnpm test` runs the fixture behavior tests separately. Verify never executes the fixture. The demo selects the same schema 0.2 contract as candidate and approved input; that is a controlled demonstration, not authenticated approval. The contract asks only for definitions and an exact syntactic `store.put` call: it does not prove that storage is reachable, correct, deployed, or actually written.
 
-Read [contract.yaml](contract.yaml), then change one fact in a copy and predict the result. Requirements inspect head state, forbids inspect head state including preexisting facts, and preservation compares matched baseline declarations exactly. Runtime/deployment evidence is intentionally unimplemented.
+Read [contract.yaml](contract.yaml), then change one fact in a copy and predict the result. Its `scope.allowed` list names the three new files; a change to any other file is DRIFT. Requirements inspect head state, forbids inspect head state including preexisting facts, and preservation compares matched baseline declarations exactly. Runtime/deployment evidence is intentionally unimplemented.
 
 ## Stronger MVP evaluation
 
-Run `pnpm qualify` for the execution-based [contract.mvp.yaml](contract.mvp.yaml). It uses schema 0.2, explicit scope, resolved dependencies, API preservation and imported Vitest results. In addition to good/incomplete/drift, it checks an aliased dependency and two implementation mutants (dead storage and removed validation). The mutations must fail actual behavior tests and verification.
+Run `pnpm qualify` for the execution-based [contract.mvp.yaml](contract.mvp.yaml). It adds resolved dependencies, API preservation and imported Vitest results. In addition to good/incomplete/drift, it checks an aliased dependency and two implementation mutants (dead storage and removed validation). The mutations must fail actual behavior tests and verification.
 
 The harness intentionally selects the same known fixture contract as candidate and approved input; this is a controlled demonstration, not authenticated approval. For a real PR follow the separately reviewed intent workflow in [workflows](../../docs/workflows.md).

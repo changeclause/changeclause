@@ -20,7 +20,9 @@ export function assessment(
       .map((f) => f.file),
   ]);
   const classify = (id: string, clause: string) => {
-    if (clause === 'scope' || clause === 'intent') return 'policy';
+    if (['scope', 'intent', 'budget', 'dependencies'].includes(clause))
+      return 'policy';
+    if (clause === 'claim') return 'claim';
     const evidence = contract.evidence.find((c) => c.id === id);
     if (!evidence) return 'static-structure';
     if (evidence.stage !== 'test') return 'unsupported';

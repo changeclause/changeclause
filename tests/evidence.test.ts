@@ -92,6 +92,21 @@ test('missing, stale source, stale intent, and ambiguous evidence never pass', (
     }),
   ).toThrow(/duplicate/i);
 });
+test("the importer keeps each test's own name beside its full name", () => {
+  const raw = report().replace(
+    '"fullName":"stores email"',
+    '"ancestorTitles":["signup"],"title":"stores email","fullName":"signup stores email"',
+  );
+  expect(importVitestReport(raw, manifest, m.contentDigest).tests).toEqual([
+    {
+      file: 'src/a.test.ts',
+      scenario: 'signup stores email',
+      title: 'stores email',
+      status: 'passed',
+    },
+  ]);
+  expect(imported().tests[0]).not.toHaveProperty('title');
+});
 test('partial reports, old reports, outside files, and changed source are rejected', () => {
   expect(() =>
     importVitestReport(
